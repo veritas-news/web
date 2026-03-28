@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { m } from "$lib/paraglide/messages.js";
 
-	const appStore = "https://apps.apple.com/app/placeholder";
+	const appStore = "https://apps.apple.com/us/app/veritas-news/id6760917649";
 </script>
 
 <div
@@ -16,7 +16,7 @@
 	>
 		<img
 			class={"w-40"}
-			src={"https://apps.apple.com/us/app/veritas-news/id6760917649"}
+			src={"https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"}
 			alt="App Store"
 		/>
 	</a>
