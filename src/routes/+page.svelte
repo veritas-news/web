@@ -1,9 +1,9 @@
 <script lang="ts">
-	import AppBadges from '$lib/components/AppBadges.svelte';
-	import FAQ from '$lib/components/FAQ.svelte';
-	import ScreenshotScroller from '$lib/components/ScreenshotScroller.svelte';
-	import { m } from '$lib/paraglide/messages.js';
-	import type { PageData } from './$types';
+	import AppBadges from "$lib/components/AppBadges.svelte";
+	import FAQ from "$lib/components/FAQ.svelte";
+	import ScreenshotScroller from "$lib/components/ScreenshotScroller.svelte";
+	import { m } from "$lib/paraglide/messages.js";
+	import type { PageData } from "./$types";
 
 	let { data }: { data: PageData } = $props();
 
@@ -11,21 +11,21 @@
 	const screenshotItems = $derived(
 		data.screenshots.map((s) => ({
 			src: s.src,
-			alt: m.screenshots_alt_filename({ filename: s.basename })
-		}))
+			alt: m.screenshots_alt_filename({ filename: s.basename }),
+		})),
 	);
 
 	const ldJson = $derived(
 		JSON.stringify({
-			'@context': 'https://schema.org',
-			'@type': 'MobileApplication',
+			"@context": "https://schema.org",
+			"@type": "MobileApplication",
 			name: m.schema_app_name(),
 			description: m.schema_app_description(),
 			applicationCategory: `https://schema.org/${m.schema_app_category()}`,
-			operatingSystem: 'iOS, Android',
-			offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-			image: m.meta_og_image()
-		}).replaceAll('<', '\\u003c')
+			operatingSystem: "iOS, Android",
+			offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+			image: m.meta_og_image(),
+		}).replaceAll("<", "\\u003c"),
 	);
 </script>
 
@@ -40,7 +40,9 @@
 	<meta name="twitter:title" content={m.meta_home_title()} />
 	<meta name="twitter:description" content={m.meta_home_description()} />
 	<meta name="twitter:image" content={m.meta_og_image()} />
-	<svelte:element this={'script'} type="application/ld+json">{ldJson}</svelte:element>
+	<svelte:element this={"script"} type="application/ld+json"
+		>{ldJson}</svelte:element
+	>
 </svelte:head>
 
 <main id="main-content">
@@ -48,7 +50,9 @@
 		class="relative overflow-hidden border-b border-line/60 px-4 py-16 sm:px-6 sm:py-24 dark:border-line-dark/60"
 		aria-labelledby="hero-heading"
 	>
-		<div class="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center">
+		<div
+			class="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center"
+		>
 			<div>
 				<p
 					class="font-rounded text-eyebrow text-veritas-verdigris uppercase dark:text-veritas-yellowGreen"
@@ -61,7 +65,9 @@
 				>
 					{m.hero_tagline()}
 				</h1>
-				<p class="mt-4 max-w-xl text-base leading-relaxed text-muted-ink dark:text-muted-ink-dark">
+				<p
+					class="mt-4 max-w-xl text-base leading-relaxed text-muted-ink dark:text-muted-ink-dark"
+				>
 					{m.hero_description()}
 				</p>
 				<div class="mt-8 w-full max-w-xl min-w-0">
@@ -79,7 +85,7 @@
 					<!-- 	class="absolute inset-3 rounded-[1.25rem] bg-gradient-to-br from-veritas-verdigris/25 via-paper to-veritas-indigo/20 dark:from-veritas-verdigris/30 dark:via-paper-dark dark:to-veritas-flame/15" -->
 					<!-- ></div> -->
 					<img
-						src="/a_onboarding_screenshot/onboard_1.png"
+						src="/screenshot/1.jpg"
 						alt={m.hero_screenshot_alt()}
 						class="rounded-[1.25rem]"
 					/>
@@ -93,7 +99,10 @@
 		</div>
 	</section>
 
-	<section class="px-4 py-16 sm:px-6 sm:py-20" aria-labelledby="features-heading">
+	<section
+		class="px-4 py-16 sm:px-6 sm:py-20"
+		aria-labelledby="features-heading"
+	>
 		<div class="mx-auto max-w-6xl">
 			<h2
 				id="features-heading"
@@ -101,7 +110,9 @@
 			>
 				{m.features_title()}
 			</h2>
-			<p class="mt-2 max-w-2xl text-muted-ink dark:text-muted-ink-dark">{m.features_subtitle()}</p>
+			<p class="mt-2 max-w-2xl text-muted-ink dark:text-muted-ink-dark">
+				{m.features_subtitle()}
+			</p>
 
 			<div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 				<article
@@ -120,10 +131,14 @@
 							/>
 						</svg>
 					</div>
-					<h3 class="font-display text-lg font-semibold text-ink dark:text-ink-dark">
+					<h3
+						class="font-display text-lg font-semibold text-ink dark:text-ink-dark"
+					>
 						{m.feature_timeline_title()}
 					</h3>
-					<p class="mt-2 text-sm text-muted-ink dark:text-muted-ink-dark">
+					<p
+						class="mt-2 text-sm text-muted-ink dark:text-muted-ink-dark"
+					>
 						{m.feature_timeline_desc()}
 					</p>
 				</article>
@@ -142,13 +157,23 @@
 								stroke-width="2"
 								stroke-linecap="round"
 							/>
-							<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" />
+							<circle
+								cx="12"
+								cy="12"
+								r="9"
+								stroke="currentColor"
+								stroke-width="2"
+							/>
 						</svg>
 					</div>
-					<h3 class="font-display text-lg font-semibold text-ink dark:text-ink-dark">
+					<h3
+						class="font-display text-lg font-semibold text-ink dark:text-ink-dark"
+					>
 						{m.feature_topics_title()}
 					</h3>
-					<p class="mt-2 text-sm text-muted-ink dark:text-muted-ink-dark">
+					<p
+						class="mt-2 text-sm text-muted-ink dark:text-muted-ink-dark"
+					>
 						{m.feature_topics_desc()}
 					</p>
 				</article>
@@ -169,10 +194,14 @@
 							/>
 						</svg>
 					</div>
-					<h3 class="font-display text-lg font-semibold text-ink dark:text-ink-dark">
+					<h3
+						class="font-display text-lg font-semibold text-ink dark:text-ink-dark"
+					>
 						{m.feature_stability_title()}
 					</h3>
-					<p class="mt-2 text-sm text-muted-ink dark:text-muted-ink-dark">
+					<p
+						class="mt-2 text-sm text-muted-ink dark:text-muted-ink-dark"
+					>
 						{m.feature_stability_desc()}
 					</p>
 				</article>
@@ -194,10 +223,16 @@
 							<circle cx="12" cy="17" r="1" fill="currentColor" />
 						</svg>
 					</div>
-					<h3 class="font-display text-lg font-semibold text-ink dark:text-ink-dark">
+					<h3
+						class="font-display text-lg font-semibold text-ink dark:text-ink-dark"
+					>
 						{m.feature_ai_title()}
 					</h3>
-					<p class="mt-2 text-sm text-muted-ink dark:text-muted-ink-dark">{m.feature_ai_desc()}</p>
+					<p
+						class="mt-2 text-sm text-muted-ink dark:text-muted-ink-dark"
+					>
+						{m.feature_ai_desc()}
+					</p>
 				</article>
 
 				<article
@@ -208,14 +243,28 @@
 						aria-hidden="true"
 					>
 						<svg class="h-7 w-7" viewBox="0 0 24 24" fill="none">
-							<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" />
-							<path d="M3 12h18M12 3a15 15 0 0 1 0 18" stroke="currentColor" stroke-width="2" />
+							<circle
+								cx="12"
+								cy="12"
+								r="9"
+								stroke="currentColor"
+								stroke-width="2"
+							/>
+							<path
+								d="M3 12h18M12 3a15 15 0 0 1 0 18"
+								stroke="currentColor"
+								stroke-width="2"
+							/>
 						</svg>
 					</div>
-					<h3 class="font-display text-lg font-semibold text-ink dark:text-ink-dark">
+					<h3
+						class="font-display text-lg font-semibold text-ink dark:text-ink-dark"
+					>
 						{m.feature_lang_title()}
 					</h3>
-					<p class="mt-2 text-sm text-muted-ink dark:text-muted-ink-dark">
+					<p
+						class="mt-2 text-sm text-muted-ink dark:text-muted-ink-dark"
+					>
 						{m.feature_lang_desc()}
 					</p>
 				</article>
@@ -228,7 +277,13 @@
 						aria-hidden="true"
 					>
 						<svg class="h-7 w-7" viewBox="0 0 24 24" fill="none">
-							<circle cx="12" cy="9" r="3" stroke="currentColor" stroke-width="2" />
+							<circle
+								cx="12"
+								cy="9"
+								r="3"
+								stroke="currentColor"
+								stroke-width="2"
+							/>
 							<path
 								d="M6 20v-1a6 6 0 0 1 12 0v1"
 								stroke="currentColor"
@@ -237,10 +292,14 @@
 							/>
 						</svg>
 					</div>
-					<h3 class="font-display text-lg font-semibold text-ink dark:text-ink-dark">
+					<h3
+						class="font-display text-lg font-semibold text-ink dark:text-ink-dark"
+					>
 						{m.feature_account_title()}
 					</h3>
-					<p class="mt-2 text-sm text-muted-ink dark:text-muted-ink-dark">
+					<p
+						class="mt-2 text-sm text-muted-ink dark:text-muted-ink-dark"
+					>
 						{m.feature_account_desc()}
 					</p>
 				</article>
@@ -257,7 +316,9 @@
 			>
 				{m.screenshots_title()}
 			</h2>
-			<p class="mt-2 text-muted-ink dark:text-muted-ink-dark">{m.screenshots_subtitle()}</p>
+			<p class="mt-2 text-muted-ink dark:text-muted-ink-dark">
+				{m.screenshots_subtitle()}
+			</p>
 			<div class="mt-8">
 				{#if screenshotItems.length === 0}
 					<p
@@ -280,7 +341,9 @@
 			>
 				{m.faq_title()}
 			</h2>
-			<p class="mt-2 text-muted-ink dark:text-muted-ink-dark">{m.faq_subtitle()}</p>
+			<p class="mt-2 text-muted-ink dark:text-muted-ink-dark">
+				{m.faq_subtitle()}
+			</p>
 			<div class="mt-8">
 				<FAQ />
 			</div>
@@ -295,10 +358,19 @@
 			class="mx-auto flex max-w-6xl flex-col items-start justify-between gap-8 md:flex-row md:items-center"
 		>
 			<div class="min-w-0 md:max-w-[min(100%,28rem)]">
-				<h2 id="cta-heading" class="font-display text-title-md font-semibold">{m.cta_title()}</h2>
-				<p class="mt-2 max-w-xl text-sm text-paper/90">{m.cta_subtitle()}</p>
+				<h2
+					id="cta-heading"
+					class="font-display text-title-md font-semibold"
+				>
+					{m.cta_title()}
+				</h2>
+				<p class="mt-2 max-w-xl text-sm text-paper/90">
+					{m.cta_subtitle()}
+				</p>
 			</div>
-			<div class="w-full min-w-0 md:w-auto md:max-w-[min(100%,44rem)] md:flex-1">
+			<div
+				class="w-full min-w-0 md:w-auto md:max-w-[min(100%,44rem)] md:flex-1"
+			>
 				<AppBadges />
 			</div>
 		</div>
