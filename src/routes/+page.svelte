@@ -7,7 +7,7 @@
 
 	let { data }: { data: PageData } = $props();
 
-	/** All image files under /static (png, jpg, webp, gif, svg), sorted by path. */
+	/** Screenshot assets bundled by Vite and exposed as URLs. */
 	const screenshotItems = $derived(
 		data.screenshots.map((s) => ({
 			src: s.src,
