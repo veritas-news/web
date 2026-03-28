@@ -4,6 +4,7 @@
 	import ScreenshotScroller from "$lib/components/ScreenshotScroller.svelte";
 	import { m } from "$lib/paraglide/messages.js";
 	import type { PageData } from "./$types";
+	import img from "$lib/assets/screenshots/2.jpg";
 
 	let { data }: { data: PageData } = $props();
 
@@ -85,15 +86,10 @@
 					<!-- 	class="absolute inset-3 rounded-[1.25rem] bg-gradient-to-br from-veritas-verdigris/25 via-paper to-veritas-indigo/20 dark:from-veritas-verdigris/30 dark:via-paper-dark dark:to-veritas-flame/15" -->
 					<!-- ></div> -->
 					<img
-						src="/screenshot/1.jpg"
+						src={img}
 						alt={m.hero_screenshot_alt()}
 						class="rounded-[1.25rem]"
 					/>
-					<div
-						class="absolute right-4 bottom-4 left-4 rounded-panel-sm border border-line/80 bg-paper/90 p-3 text-xs font-medium text-ink shadow-panel dark:border-line-dark/80 dark:bg-paper-dark/90 dark:text-ink-dark dark:shadow-panel-dark"
-					>
-						{m.features_subtitle()}
-					</div>
 				</div>
 			</div>
 		</div>
