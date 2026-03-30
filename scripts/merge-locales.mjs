@@ -135,7 +135,7 @@ const overrides = {
 		legal_terms_disclaimer:
 			'服务按“现状”提供。我们在法律允许范围内排除保证。除强制性法律另有规定外，我们对间接损害不承担责任。',
 		legal_terms_law:
-			'适用法律：[占位司法辖区]。管辖法院：[占位]。若你为欧盟/英国消费者，仍保留居住国强制性保护。',
+			'适用法律：德意志联邦共和国法律。管辖法院：Villingen-Schwenningen，Baden-Württemberg，Germany。若你为欧盟/英国消费者，你仍享有居住国的强制性保护。',
 		legal_terms_contact: '条款相关问题：thinh@thinis.de。',
 		legal_support_intro: '支持团队协助处理账户访问、应用商店账单问题以及 Veritas 内的技术故障。',
 		legal_support_email_label: '邮箱',
@@ -319,7 +319,7 @@ const overrides = {
 		legal_terms_disclaimer:
 			'Dienste „wie besehen“. Haftungsausschluss im gesetzlich zulässigen Umfang.',
 		legal_terms_law:
-			'Anwendbares Recht: [Platzhalter]. Gerichte: [Platzhalter]. EU/UK-Verbraucher behalten zwingende Schutzrechte.',
+			'Anwendbares Recht: Recht der Bundesrepublik Deutschland. Gerichte: Villingen-Schwenningen, Baden-Württemberg, Deutschland. Wenn Sie Verbraucher in der EU/im Vereinigten Königreich sind, behalten Sie die zwingenden Schutzvorschriften Ihres Wohnsitzlandes.',
 		legal_terms_contact: 'Fragen zu diesen Bedingungen: thinh@thinis.de.',
 		legal_support_intro: 'Support bei Zugang, Store-Abrechnung und technischen Problemen.',
 		legal_support_email_label: 'E-Mail',
