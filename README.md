@@ -15,7 +15,7 @@ To recreate this project with the same configuration:
 
 ```sh
 # recreate this project
-bun x sv@0.12.8 create --template minimal --types ts --add prettier eslint tailwindcss="plugins:none" paraglide="languageTags:en, zh, de, fr, ru, es, vi+demo:yes" --install bun .
+bun x sv@0.15.1 create --template minimal --types ts --add prettier eslint vitest="usages:unit,component" tailwindcss="plugins:none" mcp="ide:other+setup:local" --install bun .
 ```
 
 ## Developing
