@@ -4,7 +4,7 @@ import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
 import { sveltekit } from '@sveltejs/kit/vite';
 
-const DEFAULT_API_ORIGIN = 'http://localhost:8080';
+const DEFAULT_API_ORIGIN = 'https://veritas-sv.thinis.de';
 
 export default defineConfig(({ mode }) => {
 	const appEnv = loadEnv(mode, process.cwd(), '');

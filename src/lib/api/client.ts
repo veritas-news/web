@@ -8,7 +8,7 @@ import type {
 	QueryParams
 } from '$lib/types/api';
 
-const DEFAULT_API_ORIGIN = 'http://localhost:8080';
+const DEFAULT_API_ORIGIN = 'https://veritas-sv.thinis.de';
 const API_ORIGIN = normalizeOrigin(env.PUBLIC_API_BASE_URL || DEFAULT_API_ORIGIN);
 const BASE_PATH = '/v1';
 
