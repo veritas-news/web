@@ -74,7 +74,7 @@
   <div class="row-body">
     <span class="source">{article.source}</span>
     <strong class="title">{article.title}</strong>
-    {#if article.description}
+    {#if article.description && article.description !== article.title && !article.description.includes(article.title)}
       <p class="description">{article.description}</p>
     {/if}
     <span class="meta">{formatDateTime(article.publishedAt)}</span>

@@ -30,7 +30,7 @@
 
     <p class="subtitle">{item.subtitle}</p>
     <h2 class="headline">{item.title}</h2>
-    <p class="description">{item.description}</p>
+    {#if item.description !== item.title && !item.description.includes(item.title)}<p class="description">{item.description}</p>{/if}
 
     {#if item.location}
       <p class="location" aria-label="Location: {item.location}">

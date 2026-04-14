@@ -42,7 +42,9 @@
 	<div class="card-body">
 		<p class="subtitle">{card.subtitle}</p>
 		<h3 class="title">{card.title}</h3>
-		<p class="description">{card.description}</p>
+		{#if card.description !== card.title && !card.description.includes(card.title)}
+			<p class="description">{card.description}</p>
+		{/if}
 	</div>
 
 	{#if card.metrics.length}

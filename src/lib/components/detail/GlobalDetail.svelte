@@ -25,7 +25,7 @@
 
     <p class="subtitle">{item.subtitle}</p>
     <h2 class="headline">{item.title}</h2>
-    <p class="description">{item.description}</p>
+    {#if item.description !== item.title && !item.description.includes(item.title)}<p class="description">{item.description}</p>{/if}
 
     <p class="timespan" aria-label="Time range">
       <span class="timespan-label">Window</span>
