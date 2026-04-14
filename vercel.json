@@ -1,0 +1,9 @@
+{
+	"$schema": "https://openapi.vercel.sh/vercel.json",
+	"rewrites": [
+		{
+			"source": "/v1/:path*",
+			"destination": "https://veritas-sv.thinis.de/v1/:path*"
+		}
+	]
+}
