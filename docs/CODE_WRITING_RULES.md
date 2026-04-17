@@ -1,5 +1,7 @@
 # Code Writing Rules (Svelte Edition)
 
+**Veritas UI:** no client-side replication of server `*_v1` analytics; map pins from API only — **`../../plans/Veritas stats and features-e8fbe531.plan.md`**, **`../../docs/PLATFORM.md`**.
+
 ## Core Development Principles
 
 * Design for **clarity**, **scalability**, **reactivity**, **testability**, and **maintainability**.

@@ -1,3 +1,11 @@
+# Veritas — Web (SvelteKit)
+
+Part of the **Veritas** monorepo. Product and API contracts: **`../plans/Veritas stats and features-e8fbe531.plan.md`** · **`../docs/PLATFORM.md`**.
+
+App docs: **`docs/FRONTEND.md`**.
+
+---
+
 # sv
 
 Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).

@@ -1,6 +1,14 @@
 # Web App — SvelteKit Frontend
 
-SvelteKit app. Consumes REST API from `docs/REST_API.md`. Displays events as vertical timelines.
+SvelteKit app. Consumes REST API from **`backend/docs/REST_API.md`** (or deployed API docs). Displays events as vertical timelines.
+
+**Platform plan:** **`../../plans/Veritas stats and features-e8fbe531.plan.md`** · hub **`../../docs/PLATFORM.md`**
+
+**Client rules (web):**
+
+* **Contract-only** — use API numbers and coordinates as returned; **do not** reimplement `*_v1` analytics formulas in the browser.
+* **Maps** — first-class **map route / map view** uses **OpenStreetMap** tiles (e.g. MapLibre GL JS or Leaflet); **pins** and **`lat`/`lng`** come **only** from the API. **No** client-side geocoding of headlines or body text into authoritative locations.
+* **Phase 3** — future **`GET /v1/map/events`** (bbox, zoom, filters) is the source for map lists; **no** dependency on Phase 4 graph analysis for map UX.
 
 Read `backend_docs/` folder to understand how Backend is built.
 

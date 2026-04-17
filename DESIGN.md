@@ -1,5 +1,7 @@
 # Veritas — Design System
 
+**Product/API alignment:** [`../plans/Veritas stats and features-e8fbe531.plan.md`](../plans/Veritas%20stats%20and%20features-e8fbe531.plan.md) · [`../docs/PLATFORM.md`](../docs/PLATFORM.md) — visualizations use **server-provided** metrics only.
+
 **North Star: "The Sovereign Analyst"**
 High-end geopolitical terminal. Hard-Edge Brutalism + Editorial Sophistication.
 Every pixel placed with intent. Feels like a document of record, not a website.
