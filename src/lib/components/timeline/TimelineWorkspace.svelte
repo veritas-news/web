@@ -12,7 +12,7 @@
   import { getEvent } from '$lib/api/events';
   import { getTopic } from '$lib/api/topics';
   import { getGlobalEvent } from '$lib/api/global';
-  import { listTimeline } from '$lib/api/timeline';
+  import { fetchFeedPage, type TimelineScope } from '$lib/services/timelineFeed';
   import { toTimelineCard } from '$lib/utils/timeline';
   import type {
     AnyDetail,
@@ -26,9 +26,10 @@
 
   interface Props {
     data: UnifiedPageData;
+    scope?: TimelineScope;
   }
 
-  let { data }: Props = $props();
+  let { data, scope = 'unified' }: Props = $props();
 
   let items = $state<UnifiedTimelineItem[]>([]);
   let hasMore = $state(false);
@@ -49,6 +50,13 @@
     selectedType === 'topic_event' ? 'accent-topic'
     : selectedType === 'global_event' ? 'accent-global'
     : 'accent-event'
+  );
+
+  const feedEyebrow = $derived(
+    scope === 'events' ? 'Level 1 — Events'
+    : scope === 'topics' ? 'Level 2 — Topics'
+    : scope === 'global' ? 'Level 3 — Global'
+    : 'Global Intelligence'
   );
 
   untrack(() => seed(data));
@@ -101,11 +109,11 @@
     listError = null;
 
     try {
-      const page = await listTimeline(fetch, { cursor: nextCursor });
+      const page = await fetchFeedPage(fetch, scope, nextCursor);
       const seen = new Set(items.map((i) => i.id));
       items = [...items, ...page.items.filter((i) => !seen.has(i.id))];
-      hasMore = page.pageInfo.hasMore;
-      nextCursor = page.pageInfo.nextCursor;
+      hasMore = page.hasMore;
+      nextCursor = page.nextCursor;
     } catch (err) {
       listError = describeAPIError(err, { fallback: 'Unable to load more.' });
     } finally {
@@ -119,7 +127,7 @@
   <section class="timeline-wrap" data-timeline-scroll aria-label="Intelligence timeline">
     <header class="panel-head">
       <div>
-        <p class="panel-eyebrow {accentClass}">Global Intelligence</p>
+        <p class="panel-eyebrow {accentClass}">{feedEyebrow}</p>
         <h2 class="panel-heading">Timeline</h2>
       </div>
       <div class="head-right">

@@ -1,5 +1,6 @@
 import { browser } from '$app/environment';
 import { env } from '$env/dynamic/public';
+import { API_REQUEST_TIMEOUT_MS } from '$lib/config/api';
 import type {
 	APIEnvelope,
 	APIErrorPayload,
@@ -56,6 +57,14 @@ export async function getPaged<T>(
 	};
 }
 
+/** Full `{ data, meta }` envelope (e.g. search). */
+export async function readEnvelope<
+	Data,
+	Meta extends Record<string, unknown> = Record<string, unknown>
+>(fetcher: typeof fetch, path: string, params?: QueryParams): Promise<{ data: Data; meta?: Meta }> {
+	return request<{ data: Data; meta?: Meta }>(fetcher, path, params);
+}
+
 export function describeAPIError(error: unknown, labels: ErrorLabels = {}): string {
 	if (error instanceof APIError) {
 		switch (error.status) {
@@ -86,7 +95,8 @@ async function request<T>(fetcher: typeof fetch, path: string, params?: QueryPar
 	const response = await fetcher(buildPath(path, params), {
 		headers: {
 			accept: 'application/json'
-		}
+		},
+		signal: AbortSignal.timeout(API_REQUEST_TIMEOUT_MS)
 	});
 
 	const payload = await parseJSON(response);

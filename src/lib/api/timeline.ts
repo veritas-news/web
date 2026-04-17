@@ -1,4 +1,5 @@
 import { APIError } from '$lib/api/client';
+import { API_REQUEST_TIMEOUT_MS } from '$lib/config/api';
 import type { QueryParams } from '$lib/types/api';
 import type { UnifiedTimelineItem } from '$lib/types/event';
 import { browser } from '$app/environment';
@@ -29,7 +30,10 @@ export async function listTimeline(
 	params: QueryParams = {}
 ): Promise<TimelineResult> {
 	const url = buildTimelineUrl({ limit: 30, ...params });
-	const res = await fetcher(url, { headers: { accept: 'application/json' } });
+	const res = await fetcher(url, {
+		headers: { accept: 'application/json' },
+		signal: AbortSignal.timeout(API_REQUEST_TIMEOUT_MS)
+	});
 
 	const raw = await res.text();
 	const json: TimelineEnvelope = raw

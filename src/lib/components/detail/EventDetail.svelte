@@ -13,6 +13,9 @@
 
   const conviction = $derived(Math.min(100, Math.max(0, Math.round(item.analystConviction))));
   const impact = $derived(Math.min(100, Math.max(0, Math.round(item.impactScore))));
+  const sentiment = $derived(
+    item.sentimentIndex == null ? null : Math.min(100, Math.max(-100, Math.round(item.sentimentIndex)))
+  );
 </script>
 
 <article class="detail" aria-label="Event: {item.title}">
@@ -59,6 +62,9 @@
 
   <!-- Metadata grid -->
   <section class="meta-grid" aria-label="Event metadata">
+    {#if sentiment != null}
+      <MetadataRow label="Sentiment index" value={String(sentiment)} />
+    {/if}
     <MetadataRow label="Cluster size" value={formatCompactNumber(item.clusterSize)} />
     <MetadataRow label="Sources" value={formatCompactNumber(item.sourceCount)} />
     <MetadataRow label="Happened" value={formatDateTime(item.happenedAt)} />

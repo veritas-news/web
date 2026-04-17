@@ -1,6 +1,7 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.ico';
+	import SiteHeader from '$lib/components/layout/SiteHeader.svelte';
 
 	let { children } = $props();
 </script>
@@ -11,6 +12,7 @@
 </svelte:head>
 
 <div class="shell">
+	<SiteHeader />
 	<main class="page-frame">
 		{@render children()}
 	</main>

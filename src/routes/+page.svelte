@@ -13,4 +13,4 @@
   />
 </svelte:head>
 
-<TimelineWorkspace {data} />
+<TimelineWorkspace {data} scope="unified" />

@@ -65,6 +65,7 @@ export interface EventDetail {
   sourceCount: number;
   impactScore: number;
   analystConviction: number;
+  sentimentIndex?: number;
   supportingArticles: Article[];
 }
 
@@ -128,21 +129,23 @@ export function isGlobalDetail(d: AnyDetail): d is GlobalEventDetail {
 export interface Event {
   id: string;
   title: string;
-  description: string;
+  description?: string;
   category: string;
-  keywords: string[];
-  entities: string[];
+  keywords?: string[];
+  entities?: string[];
   happenedAt: string;
   lastUpdatedAt: string;
   generatedAt: string;
   clusterSize: number;
   sourceCount: number;
+  impactScore?: number;
+  sentimentIndex?: number;
 }
 
 export interface TopicEvent {
   id: string;
   title: string;
-  description: string;
+  description?: string;
   regionScope: string;
   generatedAt: string;
   size: number;
@@ -150,13 +153,14 @@ export interface TopicEvent {
   timeStart: string;
   timeEnd: string;
   lastUpdatedAt: string;
+  impactScore?: number;
 }
 
 export interface GlobalEvent {
   id: string;
   title: string;
-  description: string;
-  globalImpactScore: number;
+  description?: string;
+  impactScore?: number;
   generatedAt: string;
   topicCount: number;
   eventCount: number;

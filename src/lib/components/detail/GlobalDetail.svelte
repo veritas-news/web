@@ -66,11 +66,13 @@
       <p class="section-label">Regional topics</p>
       <div class="related-list">
         {#each item.relatedTopics as topic (topic.id)}
-          <RelatedItemRow
-            title={topic.title}
-            label={topic.regionScope}
-            variant="topic"
-          />
+          <a href="/topics/{topic.id}" class="related-link" data-sveltekit-preload-data="hover">
+            <RelatedItemRow
+              title={topic.title}
+              label={topic.regionScope}
+              variant="topic"
+            />
+          </a>
         {/each}
       </div>
     </section>
@@ -220,5 +222,16 @@
     display: grid;
     gap: 1px;
     background: var(--outline-variant);
+  }
+
+  .related-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    outline-offset: 2px;
+  }
+
+  .related-link:focus-visible {
+    outline: 1px solid var(--clr-topic);
   }
 </style>

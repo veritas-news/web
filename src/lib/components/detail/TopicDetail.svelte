@@ -71,12 +71,14 @@
       <p class="section-label">Related sub-events</p>
       <div class="related-list">
         {#each item.relatedSubEvents as sub (sub.id)}
-          <RelatedItemRow
-            title={sub.title}
-            meta={formatDateTime(sub.happenedAt)}
-            label={sub.primaryCategory}
-            variant="event"
-          />
+          <a href="/events/{sub.id}" class="related-link" data-sveltekit-preload-data="hover">
+            <RelatedItemRow
+              title={sub.title}
+              meta={formatDateTime(sub.happenedAt)}
+              label={sub.primaryCategory}
+              variant="event"
+            />
+          </a>
         {/each}
       </div>
     </section>
@@ -226,5 +228,16 @@
     display: grid;
     gap: 1px;
     background: var(--outline-variant);
+  }
+
+  .related-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    outline-offset: 2px;
+  }
+
+  .related-link:focus-visible {
+    outline: 1px solid var(--clr-event);
   }
 </style>
