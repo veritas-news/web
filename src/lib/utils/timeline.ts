@@ -22,6 +22,17 @@ export function toTimelineCard(item: UnifiedTimelineItem): TimelineCardModel {
       break;
   }
 
+  const signals: string[] = [];
+  if (item.sentimentIndex != null && item.type === 'event') {
+    signals.push(`Sentiment ${Math.round(item.sentimentIndex)}`);
+  }
+  if (item.articleDensity != null && item.type !== 'event') {
+    signals.push(`Density ${item.articleDensity.toFixed(2)}`);
+  }
+  if (item.relevanceGap != null && item.type !== 'event') {
+    signals.push(`Relevance gap ${item.relevanceGap.toFixed(2)}`);
+  }
+
   return {
     id: item.id,
     type: item.type,
@@ -31,6 +42,7 @@ export function toTimelineCard(item: UnifiedTimelineItem): TimelineCardModel {
     timestamp: formatDateTime(item.timelineAt),
     impactScore: item.impactScore,
     analystConviction: item.analystConviction,
-    metrics
+    metrics,
+    signals
   };
 }

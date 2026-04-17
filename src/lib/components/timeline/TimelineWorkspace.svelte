@@ -60,6 +60,16 @@
     : 'Global Intelligence'
   );
 
+  const scopeDescription = $derived(
+    scope === 'events'
+      ? 'Single incidents that passed cluster density and multi-source gates. Newest signals first.'
+      : scope === 'topics'
+        ? 'Regional narratives synthesized across days or weeks. Follow article depth and sentiment drift.'
+        : scope === 'global'
+          ? 'Widest arcs: themes that span borders and months. Impact and conviction are analyst-weighted.'
+          : 'Unified stream: globals, topics, and events in one ranked feed—ordering is server-defined; do not merge client-side.'
+  );
+
   untrack(() => seed(data));
 
   function seed(source: UnifiedPageData) {
@@ -127,9 +137,10 @@
   <!-- ── Left: timeline panel (40%) ── -->
   <section class="timeline-wrap" data-timeline-scroll aria-label="Intelligence timeline">
     <header class="panel-head">
-      <div>
+      <div class="panel-intro">
         <p class="panel-eyebrow {accentClass}">{feedEyebrow}</p>
         <h2 class="panel-heading">Timeline</h2>
+        <p class="panel-lede">{scopeDescription}</p>
       </div>
       <div class="head-right">
         <span class="item-count" aria-label="{cards.length} items loaded">{cards.length}</span>
@@ -200,7 +211,7 @@
     display: grid;
     grid-template-columns: 2fr 3fr;
     min-height: 100vh;
-    background: var(--surface);
+    background: color-mix(in oklab, var(--surface) 75%, transparent);
   }
 
   /* ── Timeline panel ── */
@@ -213,23 +224,49 @@
     max-height: 100vh;
     overflow-y: auto;
     padding: var(--sp-6);
-    background: var(--surface-low);
+    background: color-mix(in oklab, var(--surface-low) 94%, transparent);
+    border-right: 1px solid color-mix(in oklab, var(--outline-variant) 70%, transparent);
+    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.02);
     scrollbar-width: thin;
     scrollbar-color: var(--outline-variant) transparent;
   }
 
   /* ── Detail panel ── */
   .detail-wrap {
+    position: relative;
     padding: var(--sp-6) var(--sp-8);
-    background: var(--surface);
-    /* type-specific subtle left accent */
+    padding-top: calc(var(--sp-6) + 4px);
+    background: color-mix(in oklab, var(--surface) 88%, transparent);
     border-left: 1px solid var(--outline-variant);
-    transition: border-left-color var(--transition);
+    transition:
+      border-left-color var(--transition-slow),
+      box-shadow var(--transition-slow);
   }
 
-  .detail-wrap.accent-event  { border-left-color: rgba(195, 199, 204, 0.2); }
-  .detail-wrap.accent-topic  { border-left-color: rgba(254, 179, 0, 0.2); }
-  .detail-wrap.accent-global { border-left-color: rgba(236, 145, 255, 0.2); }
+  .detail-wrap::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--header-shine);
+    opacity: 0.65;
+    pointer-events: none;
+  }
+
+  .detail-wrap.accent-event {
+    border-left-color: rgba(195, 199, 204, 0.28);
+    box-shadow: var(--glow-event);
+  }
+  .detail-wrap.accent-topic {
+    border-left-color: rgba(254, 179, 0, 0.35);
+    box-shadow: var(--glow-topic);
+  }
+  .detail-wrap.accent-global {
+    border-left-color: rgba(236, 145, 255, 0.38);
+    box-shadow: var(--glow-global);
+  }
 
   .detail-inner {
     position: relative;
@@ -269,26 +306,46 @@
     color: var(--ink-muted);
   }
 
+  .panel-intro {
+    display: grid;
+    gap: var(--sp-2);
+    max-width: 42ch;
+  }
+
   .panel-heading {
-    margin: var(--sp-1) 0 0;
+    margin: 0;
     color: var(--ink);
-    font-family: var(--font-serif);
+    font-family: var(--font-display);
     font-size: var(--text-headline);
     font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1.15;
+  }
+
+  .panel-lede {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.45;
+    color: var(--ink-soft);
   }
 
   .item-count {
     display: inline-grid;
     place-items: center;
-    min-width: 2.2rem;
-    height: 2.2rem;
+    min-width: 2.4rem;
+    height: 2.4rem;
     padding: 0 var(--sp-2);
-    border: 1px solid var(--outline-variant);
-    color: var(--ink-muted);
+    border: 1px solid color-mix(in oklab, var(--outline-variant) 85%, var(--clr-event));
+    color: var(--ink);
     font-family: var(--font-sans);
     font-size: var(--text-label);
     font-weight: 700;
     font-variant-numeric: tabular-nums;
+    background: color-mix(in oklab, var(--surface-high) 80%, transparent);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
   }
 
   /* ── Panel states ── */

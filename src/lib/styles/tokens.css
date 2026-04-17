@@ -1,6 +1,6 @@
 /* Veritas Intelligence — Design Tokens
    The Sovereign Analyst. Hard-Edge Brutalism + Editorial Sophistication.
-   0px radius. No shadows. No borders for sectioning. */
+   0px radius on controls; selective depth via glow + mesh (no generic drop-shadow UI chrome). */
 
 :root {
   /* ── Surface Stack (tonal layering — depth without shadows) ── */
@@ -60,10 +60,39 @@
   /* ── Border Radius (always 0 — hard-edge brutalism) ── */
   --radius: 0px;
 
-  /* ── Motion ── */
-  --duration:   200ms;
-  --ease:       ease-out;
-  --transition: var(--duration) var(--ease);
+   /* ── Motion ── */
+  --duration:        200ms;
+  --duration-slow:   420ms;
+  --ease:            cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-out-expo:   cubic-bezier(0.16, 1, 0.3, 1);
+  --transition:      var(--duration) var(--ease);
+  --transition-slow: var(--duration-slow) var(--ease-out-expo);
+
+  /* ── Atmosphere (editorial luxury, still hard-edge) ── */
+  --mesh-a:    rgba(88, 0, 112, 0.14);
+  --mesh-b:    rgba(81, 54, 0, 0.12);
+  --mesh-c:    rgba(30, 42, 58, 0.55);
+  --body-gradient:
+    radial-gradient(120% 80% at 100% 0%, var(--mesh-a) 0%, transparent 55%),
+    radial-gradient(90% 70% at 0% 100%, var(--mesh-b) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 120%, var(--mesh-c) 0%, transparent 45%),
+    var(--surface);
+
+  --header-shine: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(236, 145, 255, 0.35) 18%,
+    rgba(254, 179, 0, 0.4) 42%,
+    rgba(195, 199, 204, 0.25) 62%,
+    transparent 100%
+  );
+
+  --glow-event:  0 0 24px rgba(195, 199, 204, 0.08);
+  --glow-topic:  0 0 28px rgba(254, 179, 0, 0.1);
+  --glow-global: 0 0 32px rgba(236, 145, 255, 0.12);
+
+  /* Display serif (loaded in app.html) */
+  --font-display: 'Cormorant', 'Newsreader', Georgia, serif;
 
   color-scheme: dark;
 }

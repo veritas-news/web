@@ -48,10 +48,34 @@
   }
 
   .line {
-    width: 1px;
+    width: 2px;
     flex: 1;
     min-height: 1.5rem;
     margin-top: var(--sp-2);
-    background: var(--outline-variant);
+    border-radius: 1px;
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--clr-event) 55%, var(--outline-variant)) 0%,
+      var(--outline-variant) 45%,
+      color-mix(in oklab, var(--outline-variant) 40%, transparent) 100%
+    );
+  }
+
+  .dot.topic_event ~ .line {
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--clr-topic) 50%, var(--outline-variant)) 0%,
+      var(--outline-variant) 50%,
+      transparent 100%
+    );
+  }
+
+  .dot.global_event ~ .line {
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--clr-global) 50%, var(--outline-variant)) 0%,
+      var(--outline-variant) 50%,
+      transparent 100%
+    );
   }
 </style>

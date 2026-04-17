@@ -12,6 +12,8 @@ export interface TimelineCardModel {
   impactScore: number;
   analystConviction: number;
   metrics: string[];
+  /** Optional analytic chips (sentiment, density, relevance gap). */
+  signals: string[];
 }
 
 export interface UnifiedPageData {
