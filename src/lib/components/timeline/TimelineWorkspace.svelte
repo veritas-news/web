@@ -6,6 +6,7 @@
   import EventDetail from '$lib/components/detail/EventDetail.svelte';
   import TopicDetail from '$lib/components/detail/TopicDetail.svelte';
   import GlobalDetail from '$lib/components/detail/GlobalDetail.svelte';
+  import DetailActionBar from '$lib/components/detail/DetailActionBar.svelte';
   import ErrorMessage from '$lib/components/ui/ErrorMessage.svelte';
   import Spinner from '$lib/components/ui/Spinner.svelte';
   import { describeAPIError } from '$lib/api/client';
@@ -166,6 +167,9 @@
     {:else}
       {#key selectedId}
         <div class="detail-inner" in:fly={{ x: 20, duration: 220, easing: cubicOut }}>
+          {#if detail}
+            <DetailActionBar id={detail.id} type={detail.type} title={detail.title} />
+          {/if}
           {#if detail?.type === 'event'}
             <EventDetail item={detail as EventDetailType} />
           {:else if detail?.type === 'topic_event'}

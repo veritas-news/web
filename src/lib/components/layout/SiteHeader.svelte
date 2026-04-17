@@ -7,7 +7,9 @@
 		{ href: '/topics', label: 'Topics' },
 		{ href: '/global', label: 'Global' },
 		{ href: '/articles', label: 'Articles' },
+		{ href: '/sources', label: 'Sources' },
 		{ href: '/search', label: 'Search' },
+		{ href: '/saved', label: 'Saved' },
 		{ href: '/pulse', label: 'Pulse' },
 		{ href: '/about', label: 'About' }
 	] as const;
