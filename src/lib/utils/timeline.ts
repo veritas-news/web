@@ -41,7 +41,7 @@ export function toTimelineCard(item: UnifiedTimelineItem): TimelineCardModel {
     description: item.description,
     timestamp: formatDateTime(item.timelineAt),
     impactScore: item.impactScore,
-    analystConviction: item.analystConviction,
+    analystConviction: item.analystConviction ?? null,
     metrics,
     signals
   };

@@ -48,7 +48,12 @@ export async function listTimeline(
 		);
 	}
 
-	return json.data;
+	const pageInfo = json.data?.pageInfo ?? { hasMore: false, nextCursor: null };
+	const items = (json.data?.items ?? []).map((item) => ({
+		...item,
+		analystConviction: item.analystConviction ?? null
+	}));
+	return { items, pageInfo };
 }
 
 function buildTimelineUrl(params: QueryParams): string {

@@ -11,9 +11,15 @@
 	<title>Veritas</title>
 </svelte:head>
 
-<div class="shell">
+<div class="grid min-h-screen grid-rows-[auto_1fr]">
 	<SiteHeader />
-	<main class="page-frame">
-		{@render children()}
+	<main class="relative isolate min-h-0 min-w-0">
+		<div
+			class="pointer-events-none fixed inset-0 z-0 bg-noise-veritas opacity-[0.04]"
+			aria-hidden="true"
+		></div>
+		<div class="relative z-10">
+			{@render children()}
+		</div>
 	</main>
 </div>

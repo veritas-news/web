@@ -1,38 +1,19 @@
 <script lang="ts">
-  import TopicDetail from '$lib/components/detail/TopicDetail.svelte';
-  import type { PageProps } from './$types';
+	import TopicDetail from '$lib/components/detail/TopicDetail.svelte';
+	import type { PageProps } from './$types';
 
-  let { data }: PageProps = $props();
+	let { data }: PageProps = $props();
 </script>
 
 <svelte:head>
-  <title>{data.item.title} — Topic — Veritas</title>
+	<title>{data.item.title} — Topic — Veritas</title>
 </svelte:head>
 
-<div class="detail-page">
-  <a href="/topics" class="back">← Topics timeline</a>
-  <TopicDetail item={data.item} />
+<div class="mx-auto grid max-w-[52rem] gap-sp-4 p-sp-6">
+	<a
+		href="/topics"
+		class="font-sans text-label font-semibold tracking-[0.04em] text-ink-muted uppercase no-underline hover:bg-transparent hover:text-topic"
+		>← Topics timeline</a
+	>
+	<TopicDetail item={data.item} />
 </div>
-
-<style>
-  .detail-page {
-    max-width: 52rem;
-    margin: 0 auto;
-    padding: var(--sp-6);
-    display: grid;
-    gap: var(--sp-4);
-  }
-
-  .back {
-    font-size: var(--text-label);
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--ink-muted);
-  }
-
-  .back:hover {
-    color: var(--clr-topic);
-    background: transparent;
-  }
-</style>

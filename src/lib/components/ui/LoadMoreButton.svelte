@@ -1,78 +1,26 @@
 <script lang="ts">
-  interface Props {
-    loading?: boolean;
-    onclick: () => void;
-  }
+	interface Props {
+		loading?: boolean;
+		onclick: () => void;
+	}
 
-  let { loading = false, onclick }: Props = $props();
+	let { loading = false, onclick }: Props = $props();
 </script>
 
 <button
-  type="button"
-  class="load-more"
-  disabled={loading}
-  aria-busy={loading}
-  {onclick}
+	type="button"
+	class="inline-flex w-full cursor-pointer items-center justify-center gap-sp-2 rounded-none border border-outline-variant bg-transparent px-sp-4 py-sp-3 font-sans text-label font-bold uppercase tracking-[0.08em] text-ink-soft transition-[background,border-color,color] duration-veritas ease-veritas hover:border-event hover:bg-surface-high hover:text-ink focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-event disabled:cursor-progress disabled:opacity-50"
+	disabled={loading}
+	aria-busy={loading}
+	{onclick}
 >
-  {#if loading}
-    <span class="spinner" aria-hidden="true"></span>
-    Loading
-  {:else}
-    Load more
-  {/if}
+	{#if loading}
+		<span
+			class="inline-block size-3.5 animate-spin rounded-full border-[1.5px] border-ink-muted/25 border-t-event"
+			aria-hidden="true"
+		></span>
+		Loading
+	{:else}
+		Load more
+	{/if}
 </button>
-
-<style>
-  .load-more {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--sp-2);
-    width: 100%;
-    border: 1px solid var(--outline-variant);
-    border-radius: var(--radius);
-    background: transparent;
-    padding: var(--sp-3) var(--sp-4);
-    color: var(--ink-soft);
-    font-family: var(--font-sans);
-    font-size: var(--text-label);
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition:
-      background var(--transition),
-      border-color var(--transition),
-      color var(--transition);
-  }
-
-  .load-more:hover:not(:disabled) {
-    border-color: var(--clr-event);
-    background: var(--surface-high);
-    color: var(--ink);
-  }
-
-  .load-more:focus-visible {
-    outline: 1px solid var(--clr-event);
-    outline-offset: 2px;
-  }
-
-  .load-more:disabled {
-    opacity: 0.5;
-    cursor: progress;
-  }
-
-  .spinner {
-    display: inline-block;
-    width: 0.8rem;
-    height: 0.8rem;
-    border: 1.5px solid rgba(160, 167, 181, 0.25);
-    border-top-color: var(--clr-event);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-  }
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-</style>

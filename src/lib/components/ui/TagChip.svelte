@@ -1,45 +1,19 @@
 <script lang="ts">
-  interface Props {
-    label: string;
-    variant?: 'event' | 'topic' | 'global' | 'neutral';
-  }
+	import { cn } from '$lib/cn';
 
-  let { label, variant = 'neutral' }: Props = $props();
+	interface Props {
+		label: string;
+		variant?: 'event' | 'topic' | 'global' | 'neutral';
+	}
+
+	let { label, variant = 'neutral' }: Props = $props();
 </script>
 
-<span class={['tag-chip', variant]}>{label}</span>
-
-<style>
-  .tag-chip {
-    display: inline-flex;
-    align-items: center;
-    border-radius: var(--radius);
-    padding: var(--sp-1) var(--sp-3);
-    font-family: var(--font-sans);
-    font-size: var(--text-label);
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-
-  .neutral {
-    background: rgba(66, 72, 81, 0.4);
-    color: var(--ink-soft);
-  }
-
-  .event {
-    background: var(--clr-event-container);
-    color: var(--clr-event);
-  }
-
-  .topic {
-    background: var(--clr-topic-container);
-    color: var(--clr-topic);
-  }
-
-  .global {
-    background: var(--clr-global-container);
-    color: var(--clr-global);
-  }
-</style>
+<span
+	class={cn(
+		'inline-flex items-center rounded-none py-px px-sp-3 font-sans text-label font-bold uppercase tracking-[0.08em] whitespace-nowrap',
+		variant === 'neutral' && 'bg-[rgb(66_72_81/0.4)] text-ink-soft',
+		variant === 'event' && 'bg-event-container text-event',
+		variant === 'topic' && 'bg-topic-container text-topic',
+		variant === 'global' && 'bg-global-container text-global'
+	)}>{label}</span>

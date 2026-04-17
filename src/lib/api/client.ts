@@ -1,5 +1,3 @@
-import { browser } from '$app/environment';
-import { env } from '$env/dynamic/public';
 import { API_REQUEST_TIMEOUT_MS } from '$lib/config/api';
 import type {
 	APIEnvelope,
@@ -9,8 +7,6 @@ import type {
 	QueryParams
 } from '$lib/types/api';
 
-const DEFAULT_API_ORIGIN = 'https://veritas-sv.thinis.de';
-const API_ORIGIN = normalizeOrigin(env.PUBLIC_API_BASE_URL || DEFAULT_API_ORIGIN);
 const BASE_PATH = '/v1';
 
 export class APIError extends Error {
@@ -114,9 +110,9 @@ async function request<T>(fetcher: typeof fetch, path: string, params?: QueryPar
 }
 
 function buildPath(path: string, params?: QueryParams): string {
-	const url = browser
-		? new URL(`${BASE_PATH}${path}`, 'http://local.veritas')
-		: new URL(`${BASE_PATH}${path}`, API_ORIGIN);
+	// Always same-origin `/v1/...` so SSR matches browser: Vercel rewrites `/v1` to the API,
+	// and Vite dev proxies `/v1`. Avoids SSR hitting the API host directly (can fail while client proxy works).
+	const url = new URL(`${BASE_PATH}${path}`, 'http://local.placeholder');
 
 	if (params) {
 		for (const [key, value] of Object.entries(params)) {
@@ -125,7 +121,7 @@ function buildPath(path: string, params?: QueryParams): string {
 		}
 	}
 
-	return browser ? `${url.pathname}${url.search}` : url.toString();
+	return `${url.pathname}${url.search}`;
 }
 
 async function parseJSON(response: Response): Promise<unknown> {
@@ -140,17 +136,5 @@ async function parseJSON(response: Response): Promise<unknown> {
 		}
 
 		return {};
-	}
-}
-
-function normalizeOrigin(value: string): string {
-	const trimmed = value.trim();
-	if (!trimmed) return DEFAULT_API_ORIGIN;
-
-	try {
-		const url = new URL(trimmed);
-		return url.origin;
-	} catch {
-		return DEFAULT_API_ORIGIN;
 	}
 }

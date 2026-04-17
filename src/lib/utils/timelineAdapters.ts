@@ -10,7 +10,7 @@ export function eventToUnified(item: Event): UnifiedTimelineItem {
 		description: item.description ?? '',
 		timelineAt: item.happenedAt,
 		impactScore: impact,
-		analystConviction: 0,
+		analystConviction: item.analystConviction ?? null,
 		sentimentIndex: item.sentimentIndex,
 		primaryCategory: item.category,
 		location: undefined,
@@ -30,7 +30,7 @@ export function topicToUnified(item: TopicEvent): UnifiedTimelineItem {
 		description: item.description ?? '',
 		timelineAt,
 		impactScore: impact,
-		analystConviction: 0,
+		analystConviction: item.analystConviction ?? null,
 		regionScope: item.regionScope,
 		articleCount: item.articleCount
 	};
@@ -47,7 +47,7 @@ export function globalToUnified(item: GlobalEvent): UnifiedTimelineItem {
 		description: item.description ?? '',
 		timelineAt,
 		impactScore: impact,
-		analystConviction: 0,
+		analystConviction: item.analystConviction ?? null,
 		topicCount: item.topicCount,
 		eventCount: item.eventCount,
 		articleCount: item.articleCount

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { TimelineCardModel } from '$lib/types/timeline';
+	import { cn } from '$lib/cn';
 
 	interface Props {
 		card: TimelineCardModel;
@@ -24,382 +25,151 @@
 		topic_event: 'Topic',
 		global_event: 'Global'
 	} as const;
+
+	const btnClass = $derived(
+		cn(
+			'group/timeline relative grid w-full cursor-pointer overflow-hidden rounded-none border-0 text-left',
+			'border-l-2 border-l-transparent bg-surface-high',
+			'bg-[linear-gradient(135deg,rgb(255_255_255/0.04)_0%,transparent_48%)]',
+			'transition-[background-color,border-color,transform,box-shadow] duration-veritas-slow ease-veritas-out',
+			'after:pointer-events-none after:absolute after:inset-0 after:bg-[linear-gradient(180deg,rgb(255_255_255/0.02)_0%,transparent_35%)] after:opacity-0 after:transition-opacity after:duration-veritas-slow after:ease-veritas-out',
+			'hover:bg-surface-highest hover:translate-x-[3px] hover:shadow-card-hover hover:after:opacity-100',
+			'focus-visible:outline focus-visible:outline-1 focus-visible:-outline-offset-1 focus-visible:outline-event',
+			card.type === 'event' && 'gap-sp-3 border-l-event px-sp-3 py-sp-3',
+			card.type === 'topic_event' && 'gap-sp-3 border-l-[3px] border-l-topic px-sp-4 py-sp-4',
+			card.type === 'global_event' && 'gap-sp-3 border-l-4 border-l-global px-sp-5 py-sp-5',
+			selected && card.type === 'event' && 'border-l-event bg-event/[0.09] shadow-glow-event',
+			selected && card.type === 'topic_event' && 'border-l-topic bg-topic/[0.1] shadow-glow-topic',
+			selected && card.type === 'global_event' && 'border-l-global bg-global/[0.12] shadow-glow-global'
+		)
+	);
+
+	const titleClass = $derived(
+		cn(
+			'm-0 font-display font-semibold leading-snug text-ink transition-colors duration-veritas-slow ease-veritas-out',
+			card.type === 'event' && 'text-title',
+			card.type === 'topic_event' && 'text-title-lg',
+			card.type === 'global_event' && 'text-headline font-bold leading-[1.15]',
+			selected && card.type === 'event' && 'text-event',
+			selected && card.type === 'topic_event' && 'text-topic',
+			selected && card.type === 'global_event' && 'text-global'
+		)
+	);
+
+	const typeChipClass = $derived(
+		cn(
+			'inline-flex items-center rounded-none py-0.5 px-sp-2 font-sans text-label font-bold uppercase tracking-[0.08em]',
+			card.type === 'event' && 'bg-event-container text-event',
+			card.type === 'topic_event' && 'bg-topic-container text-topic',
+			card.type === 'global_event' && 'bg-global-container text-global'
+		)
+	);
+
+	const signalPillClass = $derived(
+		cn(
+			'inline-flex border-l-2 py-0.5 px-2 font-sans text-[0.625rem] font-semibold uppercase tracking-wide text-ink-muted',
+			card.type === 'event' && 'border-l-event bg-event/[0.06]',
+			card.type === 'topic_event' && 'border-l-topic bg-topic/[0.07]',
+			card.type === 'global_event' && 'border-l-global bg-global/[0.08]'
+		)
+	);
+
+	const convictionFillClass = $derived(
+		cn(
+			'h-full transition-[width] duration-veritas-slow ease-veritas-out',
+			card.type === 'event' && 'bg-event',
+			card.type === 'topic_event' && 'bg-topic',
+			card.type === 'global_event' && 'bg-global'
+		)
+	);
+
+	const impactValClass = $derived(
+		cn(
+			'font-display text-[1.35rem] font-bold tabular-nums leading-none text-ink',
+			selected && card.type === 'event' && 'text-event',
+			selected && card.type === 'topic_event' && 'text-topic',
+			selected && card.type === 'global_event' && 'text-global'
+		)
+	);
 </script>
 
 <button
 	bind:this={btnEl}
 	type="button"
-	class={['timeline-card', card.type, { selected }]}
+	class={btnClass}
 	aria-pressed={selected}
 	aria-label="{typeLabel[card.type]}: {card.title}"
 	onclick={onselect}
 >
-	<div class="card-top">
-		<span class={['type-chip', card.type]}>{typeLabel[card.type]}</span>
-		<span class="timestamp" aria-label="Published {card.timestamp}">{card.timestamp}</span>
+	<div class="flex items-center justify-between gap-sp-2">
+		<span class={typeChipClass}>{typeLabel[card.type]}</span>
+		<span class="whitespace-nowrap font-sans text-label font-medium text-ink-muted" aria-label="Published {card.timestamp}"
+			>{card.timestamp}</span
+		>
 	</div>
 
-	<div class="card-body">
-		<p class="subtitle">{card.subtitle}</p>
-		<h3 class="title">{card.title}</h3>
+	<div class="grid gap-sp-2">
+		<p class="m-0 font-sans text-label font-semibold uppercase tracking-wide text-ink-muted">{card.subtitle}</p>
+		<h3 class={titleClass}>{card.title}</h3>
 		{#if card.description !== card.title && !card.description.includes(card.title)}
-			<p class="description">{card.description}</p>
+			<p
+				class="m-0 line-clamp-2 font-sans text-body leading-[1.55] text-ink-soft [display:-webkit-box] [-webkit-box-orient:vertical]"
+			>
+				{card.description}
+			</p>
 		{/if}
 	</div>
 
 	{#if card.metrics.length}
-		<div class="metrics" aria-label="Metrics">
+		<div class="flex flex-wrap gap-sp-2" aria-label="Metrics">
 			{#each card.metrics as metric (metric)}
-				<span class="metric-pill">{metric}</span>
+				<span
+					class="inline-flex items-center border border-outline-variant/80 bg-surface/40 px-[0.45rem] py-0.5 font-sans text-[0.625rem] font-semibold uppercase tracking-wide text-ink-soft"
+					>{metric}</span
+				>
 			{/each}
 		</div>
 	{/if}
 
 	{#if card.signals.length}
-		<div class="signals" aria-label="Analytic signals">
+		<div class="flex flex-wrap gap-sp-2" aria-label="Analytic signals">
 			{#each card.signals as sig (sig)}
-				<span class="signal-pill">{sig}</span>
+				<span class={signalPillClass}>{sig}</span>
 			{/each}
 		</div>
 	{/if}
 
-	<div class="score-row" aria-label="Impact {card.impactScore}, conviction {card.analystConviction}%">
-		<div class="score-meters">
-			<div class="meter">
-				<span class="meter-label">Conviction</span>
-				<div class="conviction-bar">
-					<div class="conviction-fill" style="width: {Math.min(100, card.analystConviction)}%"></div>
+	<div
+		class="grid items-end gap-sp-3 border-t border-outline-variant/65 pt-sp-1 {card.analystConviction != null
+			? 'grid-cols-[1fr_auto]'
+			: 'grid-cols-1 justify-items-end'}"
+		aria-label={card.analystConviction != null
+			? `Impact ${card.impactScore}, conviction ${card.analystConviction}%`
+			: `Impact ${card.impactScore}`}
+	>
+		{#if card.analystConviction != null}
+			<div class="min-w-0">
+				<div class="grid grid-cols-[auto_1fr_auto] items-center gap-sp-2">
+					<span class="whitespace-nowrap text-[0.6rem] font-bold uppercase tracking-[0.08em] text-ink-muted"
+						>Conviction</span
+					>
+					<div class="h-0.5 overflow-hidden bg-outline-variant">
+						<div
+							class={convictionFillClass}
+							style="width: {Math.min(100, card.analystConviction)}%"
+						></div>
+					</div>
+					<span class="min-w-[2.25rem] text-right font-sans text-label font-bold tabular-nums text-ink-soft"
+						>{Math.round(card.analystConviction)}%</span
+					>
 				</div>
-				<span class="meter-val">{Math.round(card.analystConviction)}%</span>
 			</div>
-		</div>
-		<div class="impact-block">
-			<span class="impact-label">Impact</span>
-			<span class="impact-val">{card.impactScore}</span>
+		{/if}
+		<div
+			class="grid min-w-[4.5rem] justify-items-end gap-0.5 border border-outline-variant bg-surface/55 px-sp-2 py-sp-1"
+		>
+			<span class="text-[0.55rem] font-bold uppercase tracking-[0.12em] text-ink-muted">Impact</span>
+			<span class={impactValClass}>{card.impactScore}</span>
 		</div>
 	</div>
 </button>
-
-<style>
-	/* ── Base card ── */
-	.timeline-card {
-	--card-shine: linear-gradient(
-			135deg,
-			rgba(255, 255, 255, 0.04) 0%,
-			transparent 48%,
-			transparent 100%
-		);
-		display: grid;
-		gap: var(--sp-3);
-		width: 100%;
-		border: none;
-		border-left: 2px solid transparent;
-		border-radius: var(--radius);
-		background: var(--surface-high);
-		background-image: var(--card-shine);
-		padding: var(--sp-3) var(--sp-4);
-		text-align: left;
-		cursor: pointer;
-		position: relative;
-		overflow: hidden;
-		transition:
-			background var(--transition-slow),
-			border-left-color var(--transition-slow),
-			transform var(--transition-slow),
-			box-shadow var(--transition-slow);
-	}
-
-	.timeline-card::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, transparent 35%);
-		pointer-events: none;
-		opacity: 0;
-		transition: opacity var(--transition-slow);
-	}
-
-	.timeline-card:hover {
-		background-color: var(--surface-highest);
-		transform: translateX(3px);
-		box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
-	}
-
-	.timeline-card:hover::after {
-		opacity: 1;
-	}
-
-	.timeline-card:focus-visible {
-		outline: 1px solid var(--clr-event);
-		outline-offset: -1px;
-	}
-
-	/* ── Type variants ── */
-	.timeline-card.event {
-		border-left-color: var(--clr-event);
-		padding: var(--sp-3) var(--sp-4);
-	}
-
-	.timeline-card.topic_event {
-		border-left-width: 3px;
-		border-left-color: var(--clr-topic);
-		padding: var(--sp-4) var(--sp-5);
-	}
-
-	.timeline-card.global_event {
-		border-left-width: 4px;
-		border-left-color: var(--clr-global);
-		padding: var(--sp-5) var(--sp-6);
-	}
-
-	/* ── Selected ── */
-	.timeline-card.event.selected {
-		background-color: rgba(195, 199, 204, 0.09);
-		border-left-color: var(--clr-event);
-		box-shadow: var(--glow-event);
-	}
-	.timeline-card.topic_event.selected {
-		background-color: rgba(254, 179, 0, 0.1);
-		border-left-color: var(--clr-topic);
-		box-shadow: var(--glow-topic);
-	}
-	.timeline-card.global_event.selected {
-		background-color: rgba(236, 145, 255, 0.12);
-		border-left-color: var(--clr-global);
-		box-shadow: var(--glow-global);
-	}
-
-	/* ── Card top ── */
-	.card-top {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: var(--sp-2);
-	}
-
-	.type-chip {
-		display: inline-flex;
-		align-items: center;
-		border-radius: var(--radius);
-		padding: 0.15rem var(--sp-2);
-		font-family: var(--font-sans);
-		font-size: var(--text-label);
-		font-weight: 700;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-	}
-
-	.type-chip.event {
-		background: var(--clr-event-container);
-		color: var(--clr-event);
-	}
-	.type-chip.topic_event {
-		background: var(--clr-topic-container);
-		color: var(--clr-topic);
-	}
-	.type-chip.global_event {
-		background: var(--clr-global-container);
-		color: var(--clr-global);
-	}
-
-	.timestamp {
-		color: var(--ink-muted);
-		font-family: var(--font-sans);
-		font-size: var(--text-label);
-		font-weight: 500;
-		white-space: nowrap;
-	}
-
-	/* ── Card body ── */
-	.card-body {
-		display: grid;
-		gap: var(--sp-2);
-	}
-
-	.subtitle {
-		margin: 0;
-		color: var(--ink-muted);
-		font-family: var(--font-sans);
-		font-size: var(--text-label);
-		font-weight: 600;
-		letter-spacing: 0.05em;
-		text-transform: uppercase;
-	}
-
-	.title {
-		margin: 0;
-		color: var(--ink);
-		font-family: var(--font-display);
-		font-size: var(--text-title);
-		font-weight: 600;
-		line-height: 1.25;
-		transition: color var(--transition-slow);
-	}
-
-	.timeline-card.event.selected .title  { color: var(--clr-event); }
-	.timeline-card.topic_event.selected .title  { color: var(--clr-topic); }
-	.timeline-card.global_event.selected .title { color: var(--clr-global); }
-
-	.timeline-card.topic_event .title {
-		font-size: var(--text-title-lg);
-		font-weight: 600;
-	}
-
-	.timeline-card.global_event .title {
-		font-family: var(--font-display);
-		font-size: var(--text-headline);
-		font-weight: 700;
-		line-height: 1.15;
-	}
-
-	.description {
-		display: -webkit-box;
-		margin: 0;
-		color: var(--ink-soft);
-		font-family: var(--font-sans);
-		font-size: var(--text-body);
-		line-height: 1.55;
-		line-clamp: 2;
-		-webkit-line-clamp: 2;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
-	}
-
-	/* ── Metrics ── */
-	.metrics {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--sp-2);
-	}
-
-	.metric-pill {
-		display: inline-flex;
-		align-items: center;
-		padding: 0.12rem 0.45rem;
-		border: 1px solid color-mix(in oklab, var(--outline-variant) 80%, transparent);
-		color: var(--ink-soft);
-		font-family: var(--font-sans);
-		font-size: 0.625rem;
-		font-weight: 600;
-		letter-spacing: 0.05em;
-		text-transform: uppercase;
-		background: color-mix(in oklab, var(--surface) 40%, transparent);
-	}
-
-	.signals {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--sp-2);
-	}
-
-	.signal-pill {
-		display: inline-flex;
-		padding: 0.1rem 0.5rem;
-		border-left: 2px solid var(--clr-event);
-		font-family: var(--font-sans);
-		font-size: 0.625rem;
-		font-weight: 600;
-		letter-spacing: 0.04em;
-		text-transform: uppercase;
-		color: var(--ink-muted);
-		background: rgba(195, 199, 204, 0.06);
-	}
-
-	.timeline-card.topic_event .signal-pill {
-		border-left-color: var(--clr-topic);
-		background: rgba(254, 179, 0, 0.07);
-	}
-	.timeline-card.global_event .signal-pill {
-		border-left-color: var(--clr-global);
-		background: rgba(236, 145, 255, 0.08);
-	}
-
-	/* ── Score row: conviction bar + impact value ── */
-	.score-row {
-		display: grid;
-		grid-template-columns: 1fr auto;
-		align-items: end;
-		gap: var(--sp-3);
-		padding-top: var(--sp-1);
-		border-top: 1px solid color-mix(in oklab, var(--outline-variant) 65%, transparent);
-	}
-
-	.score-meters {
-		min-width: 0;
-	}
-
-	.meter {
-		display: grid;
-		grid-template-columns: auto 1fr auto;
-		align-items: center;
-		gap: var(--sp-2);
-	}
-
-	.meter-label {
-		font-size: 0.6rem;
-		font-weight: 700;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--ink-muted);
-		white-space: nowrap;
-	}
-
-	.meter-val {
-		font-size: var(--text-label);
-		font-weight: 700;
-		font-variant-numeric: tabular-nums;
-		color: var(--ink-soft);
-		min-width: 2.25rem;
-		text-align: right;
-	}
-
-	.conviction-bar {
-		height: 3px;
-		background: var(--outline-variant);
-		overflow: hidden;
-	}
-
-	.conviction-fill {
-		height: 100%;
-		background: var(--clr-event);
-		transition: width var(--transition-slow);
-	}
-
-	.timeline-card.topic_event .conviction-fill {
-		background: var(--clr-topic);
-	}
-	.timeline-card.global_event .conviction-fill {
-		background: var(--clr-global);
-	}
-
-	.impact-block {
-		display: grid;
-		justify-items: end;
-		gap: 0.1rem;
-		padding: var(--sp-1) var(--sp-2);
-		border: 1px solid var(--outline-variant);
-		background: color-mix(in oklab, var(--surface) 55%, transparent);
-		min-width: 4.5rem;
-	}
-
-	.impact-label {
-		font-size: 0.55rem;
-		font-weight: 700;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
-		color: var(--ink-muted);
-	}
-
-	.impact-val {
-		color: var(--ink);
-		font-family: var(--font-display);
-		font-size: 1.35rem;
-		font-weight: 700;
-		font-variant-numeric: tabular-nums;
-		line-height: 1;
-	}
-
-	.timeline-card.event.selected .impact-val   { color: var(--clr-event); }
-	.timeline-card.topic_event.selected .impact-val  { color: var(--clr-topic); }
-	.timeline-card.global_event.selected .impact-val { color: var(--clr-global); }
-</style>

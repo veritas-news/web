@@ -6,7 +6,7 @@
 * Prefer **low coupling** and **predictable state flow**.
 * Favor **small components**, **small modules**, and **explicit data flow**.
 * Maintain **strong separation between UI, state, and business logic**.
-
+  
 ---
 
 ## Mandatory Rules

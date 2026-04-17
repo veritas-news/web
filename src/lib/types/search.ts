@@ -5,7 +5,7 @@ export interface SearchEventHit {
 	title: string;
 	category: string;
 	impactScore: number;
-	sentimentIndex: number;
+	sentimentIndex?: number;
 	happenedAt: string;
 	lastUpdatedAt: string;
 	clusterSize: number;

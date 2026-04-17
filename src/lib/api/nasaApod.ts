@@ -1,6 +1,6 @@
 import { API_REQUEST_TIMEOUT_MS } from '$lib/config/api';
 
-const DEMO_KEY = 'DEMO_KEY';
+const DEMO_KEY = 'DacoS9rlwNqBINQ8MaHTX1Do5dBVDBicAszhMuGb';
 
 export interface NasaApod {
 	title: string;

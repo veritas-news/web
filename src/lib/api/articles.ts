@@ -11,6 +11,7 @@ export function listArticles(fetcher: typeof fetch, params: QueryParams = {}) {
 	});
 }
 
+/** Use query `id` so link-shaped guids (RSS fallback uses article URL) survive proxies and path routing. */
 export function getArticle(fetcher: typeof fetch, id: string) {
-	return get<Article>(fetcher, `/articles/${encodeURIComponent(id)}`);
+	return get<Article>(fetcher, '/articles/by-id', { id });
 }

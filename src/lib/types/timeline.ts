@@ -10,7 +10,7 @@ export interface TimelineCardModel {
   description: string;
   timestamp: string;
   impactScore: number;
-  analystConviction: number;
+  analystConviction: number | null;
   metrics: string[];
   /** Optional analytic chips (sentiment, density, relevance gap). */
   signals: string[];

@@ -12,7 +12,8 @@ export interface UnifiedTimelineItem {
   description: string;
   timelineAt: string;
   impactScore: number;
-  analystConviction: number;
+  /** Null when a compact list endpoint omits this field. */
+  analystConviction: number | null;
   // Optional analytics
   sentimentIndex?: number;
   articleDensity?: number;
@@ -34,8 +35,13 @@ export interface UnifiedTimelineItem {
 export interface RelatedSubEvent {
   id: string;
   title: string;
-  happenedAt: string;
+  /** API: timeline compact row time (JSON: timelineAt) */
+  timelineAt?: string;
+  subtitle?: string;
   primaryCategory?: string;
+  location?: string;
+  /** Older payloads only; prefer timelineAt */
+  happenedAt?: string;
 }
 
 export interface RelatedTopic {
@@ -84,7 +90,7 @@ export interface TopicEventDetail {
   timeEnd: string;
   impactScore: number;
   analystConviction: number;
-  sentimentIndex: number;
+  sentimentIndex?: number;
   articleDensity: number;
   relevanceGap: number;
   relatedSubEvents: RelatedSubEvent[];
@@ -112,19 +118,6 @@ export interface GlobalEventDetail {
 
 export type AnyDetail = EventDetail | TopicEventDetail | GlobalEventDetail;
 
-// ── Type guards ───────────────────────────────────────────────────────────
-export function isEventDetail(d: AnyDetail): d is EventDetail {
-  return d.type === 'event';
-}
-
-export function isTopicDetail(d: AnyDetail): d is TopicEventDetail {
-  return d.type === 'topic_event';
-}
-
-export function isGlobalDetail(d: AnyDetail): d is GlobalEventDetail {
-  return d.type === 'global_event';
-}
-
 // ── Legacy types (kept for individual list endpoints) ─────────────────────
 export interface Event {
   id: string;
@@ -140,6 +133,7 @@ export interface Event {
   sourceCount: number;
   impactScore?: number;
   sentimentIndex?: number;
+  analystConviction?: number | null;
 }
 
 export interface TopicEvent {
@@ -154,6 +148,7 @@ export interface TopicEvent {
   timeEnd: string;
   lastUpdatedAt: string;
   impactScore?: number;
+  analystConviction?: number | null;
 }
 
 export interface GlobalEvent {
@@ -168,4 +163,5 @@ export interface GlobalEvent {
   timeStart: string;
   timeEnd: string;
   lastUpdatedAt: string;
+  analystConviction?: number | null;
 }

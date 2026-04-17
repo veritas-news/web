@@ -1,0 +1,149 @@
+@import 'tailwindcss';
+
+/* Veritas — Tailwind v4 theme (replaces tokens.css) */
+@theme {
+	--color-surface: #0c0e11;
+	--color-surface-low: #111418;
+	--color-surface-base: #161a1f;
+	--color-surface-high: #1b2027;
+	--color-surface-highest: #20262e;
+	--color-surface-bright: #252d36;
+
+	--color-event: #c3c7cc;
+	--color-event-container: #43474b;
+	--color-event-dim: #b6b9be;
+	--color-topic: #feb300;
+	--color-topic-container: #513600;
+	--color-topic-dim: #eda600;
+	--color-global: #ec91ff;
+	--color-global-container: #580070;
+	--color-global-dim: #dd72f7;
+
+	--color-ink: #e0e6f1;
+	--color-ink-soft: #a5abb6;
+	--color-ink-muted: #707680;
+
+	--color-error: #ee7d77;
+	--color-error-container: #7f2927;
+	--color-outline: #707680;
+	--color-outline-variant: #424851;
+
+	--font-sans: 'Work Sans', ui-sans-serif, system-ui, sans-serif;
+	--font-serif: 'Newsreader', Georgia, serif;
+	--font-display: 'Cormorant', 'Newsreader', Georgia, serif;
+
+	--text-display: 3.5rem;
+	--text-headline: 1.75rem;
+	--text-title-lg: 1.25rem;
+	--text-title: 1.05rem;
+	--text-body: 0.875rem;
+	--text-label: 0.6875rem;
+
+	--spacing-sp-1: 0.25rem;
+	--spacing-sp-2: 0.5rem;
+	--spacing-sp-3: 0.75rem;
+	--spacing-sp-4: 1rem;
+	--spacing-sp-5: 1.25rem;
+	--spacing-sp-6: 1.5rem;
+	--spacing-sp-8: 2rem;
+	--spacing-sp-10: 2.5rem;
+	--spacing-sp-12: 3rem;
+	--spacing-sp-16: 4rem;
+
+	--shadow-glow-event: 0 0 24px rgb(195 199 204 / 0.08);
+	--shadow-glow-topic: 0 0 28px rgb(254 179 0 / 0.1);
+	--shadow-glow-global: 0 0 32px rgb(236 145 255 / 0.12);
+	--shadow-card-hover: 0 12px 40px rgb(0 0 0 / 0.35);
+
+	--ease-veritas: cubic-bezier(0.33, 1, 0.68, 1);
+	--ease-veritas-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+	--transition-duration-veritas: 200ms;
+	--transition-duration-veritas-slow: 420ms;
+
+	--background-image-header-shine: linear-gradient(
+		90deg,
+		transparent 0%,
+		rgb(236 145 255 / 0.35) 18%,
+		rgb(254 179 0 / 0.4) 42%,
+		rgb(195 199 204 / 0.25) 62%,
+		transparent 100%
+	);
+}
+
+@utility bg-veritas-body {
+	background-color: var(--color-surface);
+	background-image:
+		radial-gradient(120% 80% at 100% 0%, rgb(88 0 112 / 0.14) 0%, transparent 55%),
+		radial-gradient(90% 70% at 0% 100%, rgb(81 54 0 / 0.12) 0%, transparent 50%),
+		radial-gradient(ellipse at 50% 120%, rgb(30 42 58 / 0.55) 0%, transparent 45%);
+	background-attachment: fixed;
+}
+
+@utility bg-noise-veritas {
+	background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@layer base {
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+
+	html {
+		scroll-behavior: smooth;
+		@apply bg-surface;
+		color-scheme: dark;
+	}
+
+	body {
+		@apply m-0 min-h-screen bg-veritas-body font-sans text-body text-ink antialiased;
+		line-height: 1.5;
+	}
+
+	body,
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	p,
+	ul,
+	ol,
+	li {
+		@apply m-0 p-0;
+	}
+
+	a {
+		@apply text-event no-underline transition-colors duration-veritas ease-veritas;
+	}
+	a:hover {
+	@apply bg-event/[0.08];
+	}
+
+	button,
+	input,
+	textarea,
+	select {
+		font: inherit;
+	}
+
+	img {
+		@apply block max-w-full;
+	}
+
+	::selection {
+		@apply bg-event/20;
+	}
+
+	:focus-visible {
+		@apply outline outline-1 outline-offset-2 outline-event;
+	}
+
+	* {
+		scrollbar-width: thin;
+		scrollbar-color: var(--color-outline-variant) transparent;
+	}
+}
