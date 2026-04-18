@@ -11,6 +11,7 @@
 	import ErrorMessage from '$lib/components/ui/ErrorMessage.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import { describeAPIError } from '$lib/api/client';
+	import { ensureAnonymousSession } from '$lib/identity/session';
 	import { getEvent } from '$lib/api/events';
 	import { getTopic } from '$lib/api/topics';
 	import { getGlobalEvent } from '$lib/api/global';
@@ -30,6 +31,7 @@
 	import { cn } from '$lib/cn';
 
 	const SPLIT_STORAGE_KEY = 'veritas.timelineSplitPct';
+	const FOLLOWING_STORAGE_KEY = 'veritas.timelineFollowing';
 	const SPLIT_DEFAULT = 40;
 	const SPLIT_MIN = 22;
 	const SPLIT_MAX = 68;
@@ -59,6 +61,9 @@
 	let splitDragging = $state(false);
 	let liveUpdating = $state(false);
 	let liveStale = $state(false);
+	/** Unified timeline only: filter to user's follows (requires identity session). */
+	let followingMode = $state(false);
+	let personalUserId = $state<string | null>(null);
 
 	const cards = $derived(items.map(toTimelineCard));
 
@@ -87,7 +92,9 @@
 				? 'Level 2 — Topics'
 				: scope === 'global'
 					? 'Level 3 — Global'
-					: 'Global Intelligence'
+					: followingMode
+						? 'Following'
+						: 'Global Intelligence'
 	);
 
 	const scopeDescription = $derived(
@@ -97,8 +104,56 @@
 				? 'Regional narratives synthesized across days or weeks. Follow article depth and sentiment drift.'
 				: scope === 'global'
 					? 'Widest arcs: themes that span borders and months. Impact and conviction are analyst-weighted.'
-					: 'Unified stream: globals, topics, and events in one ranked feed—ordering is server-defined; do not merge client-side.'
+					: followingMode
+						? 'Stories that match topics or regions you follow—filtered on the server from the same unified stream.'
+						: 'Unified stream: globals, topics, and events in one ranked feed—ordering is server-defined; do not merge client-side.'
 	);
+
+	function timelineFeedOpts(): { personalUserId?: string } | undefined {
+		if (scope !== 'unified' || !followingMode || !personalUserId) return undefined;
+		return { personalUserId };
+	}
+
+	async function refreshTimelineList() {
+		const page = await fetchFeedPage(fetch, scope, null, timelineFeedOpts());
+		items = [...page.items];
+		hasMore = page.hasMore;
+		nextCursor = page.nextCursor;
+		listError = null;
+		if (selectedId && !page.items.some((i) => i.id === selectedId)) {
+			selectedId = null;
+			selectedType = null;
+			detail = null;
+			detailError = null;
+		}
+	}
+
+	async function onFollowingToggle(next: boolean) {
+		if (scope !== 'unified') return;
+		followingMode = next;
+		try {
+			localStorage.setItem(FOLLOWING_STORAGE_KEY, next ? '1' : '0');
+		} catch {
+			/* ignore */
+		}
+		if (next) {
+			try {
+				personalUserId = await ensureAnonymousSession();
+			} catch (err) {
+				listError = describeAPIError(err, { fallback: 'Could not start a session for Following.' });
+				followingMode = false;
+				personalUserId = null;
+				return;
+			}
+		} else {
+			personalUserId = null;
+		}
+		try {
+			await refreshTimelineList();
+		} catch (err) {
+			listError = describeAPIError(err, { fallback: 'Unable to load timeline.' });
+		}
+	}
 
 	untrack(() => seed(data));
 
@@ -111,6 +166,22 @@
 				if (Number.isFinite(n)) {
 					leftWidthPct = Math.min(SPLIT_MAX, Math.max(SPLIT_MIN, n));
 				}
+			}
+		} catch {
+			/* ignore */
+		}
+
+		try {
+			if (scope === 'unified' && localStorage.getItem(FOLLOWING_STORAGE_KEY) === '1') {
+				followingMode = true;
+				void (async () => {
+					try {
+						personalUserId = await ensureAnonymousSession();
+						await refreshTimelineList();
+					} catch (err) {
+						console.warn('[timeline] following feed restore failed', err);
+					}
+				})();
 			}
 		} catch {
 			/* ignore */
@@ -159,7 +230,7 @@
 		if (liveUpdating) return;
 		liveUpdating = true;
 		try {
-			const page = await fetchFeedPage(fetch, scope, null);
+			const page = await fetchFeedPage(fetch, scope, null, timelineFeedOpts());
 			const previousSelected = selectedId;
 			const seen = new Set<string>();
 			const merged: UnifiedTimelineItem[] = [];
@@ -289,7 +360,7 @@
 		listError = null;
 
 		try {
-			const page = await fetchFeedPage(fetch, scope, nextCursor);
+			const page = await fetchFeedPage(fetch, scope, nextCursor, timelineFeedOpts());
 			const seen = new Set(items.map((i) => i.id));
 			items = [...items, ...page.items.filter((i) => !seen.has(i.id))];
 			hasMore = page.hasMore;
@@ -335,7 +406,37 @@
 					{scopeDescription}
 				</p>
 			</div>
-			<div class="flex items-center gap-sp-2">
+			<div class="flex flex-col items-end gap-sp-2 sm:flex-row sm:items-center">
+				{#if scope === 'unified'}
+					<div
+						class="flex rounded-sm border border-outline-variant bg-surface-high p-0.5 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.03)]"
+						role="group"
+						aria-label="Timeline scope"
+					>
+						<button
+							type="button"
+							class={cn(
+								'rounded-sm px-sp-3 py-sp-2 font-sans text-label font-bold uppercase tracking-wide transition-colors',
+								!followingMode ? 'bg-event text-surface' : 'text-ink-muted hover:text-ink'
+							)}
+							aria-pressed={!followingMode}
+							onclick={() => void onFollowingToggle(false)}
+						>
+							All
+						</button>
+						<button
+							type="button"
+							class={cn(
+								'rounded-sm px-sp-3 py-sp-2 font-sans text-label font-bold uppercase tracking-wide transition-colors',
+								followingMode ? 'bg-event text-surface' : 'text-ink-muted hover:text-ink'
+							)}
+							aria-pressed={followingMode}
+							onclick={() => void onFollowingToggle(true)}
+						>
+							Following
+						</button>
+					</div>
+				{/if}
 				<span
 					class="inline-grid min-h-[2.4rem] min-w-[2.4rem] place-items-center border border-[color-mix(in_oklab,var(--color-outline-variant)_85%,var(--color-event))] bg-[color-mix(in_oklab,var(--color-surface-high)_80%,transparent)] px-sp-2 font-sans text-label font-bold text-ink tabular-nums shadow-[inset_0_0_0_1px_rgb(255_255_255/0.03)]"
 					aria-label="{cards.length} items loaded">{cards.length}</span
@@ -354,22 +455,22 @@
 		/>
 	</section>
 
-	<div
-		class="hidden w-1.5 shrink-0 cursor-col-resize touch-none bg-outline-variant/45 outline-none hover:bg-event/35 focus-visible:bg-event/40 focus-visible:ring-1 focus-visible:ring-event lg:block"
-		role="separator"
+	<button
+		type="button"
+		class="hidden w-1.5 shrink-0 cursor-col-resize touch-none border-0 bg-outline-variant/45 p-0 outline-none hover:bg-event/35 focus-visible:bg-event/40 focus-visible:ring-1 focus-visible:ring-event lg:block"
+		role="slider"
 		aria-orientation="vertical"
 		aria-label="Resize timeline and detail panels"
 		aria-valuemin={SPLIT_MIN}
 		aria-valuemax={SPLIT_MAX}
 		aria-valuenow={Math.round(leftWidthPct)}
-		tabindex="0"
 		onpointerdown={onGripPointerDown}
 		onpointermove={onGripPointerMove}
 		onpointerup={onGripPointerUp}
 		onpointercancel={onGripPointerUp}
 		onlostpointercapture={onGripLostPointerCapture}
 		onkeydown={onGripKeydown}
-	></div>
+	></button>
 
 	<!-- ── Right: detail panel ── -->
 	<section

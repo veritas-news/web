@@ -53,6 +53,39 @@ export interface RelatedTopic {
 // ── Full detail types (from GET /v1/events|topics|global/:id) ─────────────
 // Articles + related items are embedded in the detail response.
 
+export interface InsightV1 {
+  version?: string;
+  whyThisMatters: string;
+  confidenceScore: number;
+  confidenceLabel: string;
+  uncertaintyLevelV1?: string;
+}
+
+export interface EventEvolution {
+	schema_version?: string;
+	summary: string;
+	peerEventCount: number;
+	topicId?: string;
+	globalId?: string;
+	relationshipCount: number;
+}
+
+/** Deterministic domain mix (`source_reliability_v1`). */
+export interface SourceReliabilityV1 {
+	version: string;
+	articleCount: number;
+	uniqueDomains: number;
+	diversity: number;
+	topDomains: { domain: string; count: number; share: number }[];
+}
+
+/** Time-span lifecycle (`lifecycle_v1`). */
+export interface LifecycleV1 {
+	version: string;
+	spanHours: number;
+	phase: 'acute' | 'developing' | 'sustained' | 'stale' | '';
+}
+
 export interface EventDetail {
   id: string;
   type: 'event';
@@ -72,7 +105,11 @@ export interface EventDetail {
   impactScore: number;
   analystConviction: number;
   sentimentIndex?: number;
-  supportingArticles: Article[];
+	supportingArticles: Article[];
+	insightV1?: InsightV1;
+	eventEvolution?: EventEvolution;
+	sourceReliabilityV1?: SourceReliabilityV1;
+	lifecycleV1?: LifecycleV1;
 }
 
 export interface TopicEventDetail {
@@ -95,6 +132,7 @@ export interface TopicEventDetail {
   relevanceGap: number;
   relatedSubEvents: RelatedSubEvent[];
   supportingArticles: Article[];
+  insightV1?: InsightV1;
 }
 
 export interface GlobalEventDetail {
@@ -114,6 +152,7 @@ export interface GlobalEventDetail {
   timeEnd: string;
   relatedTopics: RelatedTopic[];
   supportingArticles: Article[];
+  insightV1?: InsightV1;
 }
 
 export type AnyDetail = EventDetail | TopicEventDetail | GlobalEventDetail;

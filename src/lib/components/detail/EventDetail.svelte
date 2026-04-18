@@ -7,6 +7,7 @@
 	import type { EventDetail } from '$lib/types/event';
 	import { formatCompactNumber, formatDateTime } from '$lib/utils/format';
 	import { supportingArticlesSortedByImage } from '$lib/utils/articleDisplay';
+	import { clipToSentences, confidenceNarrative, evolutionNarrative } from '$lib/utils/detailInsights';
 
 	interface Props {
 		item: EventDetail;
@@ -15,6 +16,25 @@
 	let { item }: Props = $props();
 
 	const supportingArticles = $derived(supportingArticlesSortedByImage(item.supportingArticles));
+
+	const lifecycleLine = $derived.by((): string | null => {
+		const l = item.lifecycleV1;
+		if (!l?.phase) return null;
+		const span = l.spanHours;
+		const spanLabel =
+			span < 72 ? `${Math.round(span)}h span` : `${Math.round(span / 24)}d span`;
+		const phase =
+			l.phase === 'acute'
+				? 'Acute'
+				: l.phase === 'developing'
+					? 'Developing'
+					: l.phase === 'sustained'
+						? 'Sustained'
+						: l.phase === 'stale'
+							? 'Stale'
+							: l.phase;
+		return `${phase} · ${spanLabel}`;
+	});
 
 	const conviction = $derived(Math.min(100, Math.max(0, Math.round(item.analystConviction))));
 	const impact = $derived(Math.min(100, Math.max(0, Math.round(item.impactScore))));
@@ -48,6 +68,43 @@
 		{/if}
 	</header>
 
+	{#if item.insightV1}
+		<section class="border-l-2 border-event bg-surface-high p-sp-4" aria-label="Insight">
+			<p class={d.sectionLabel}>Why this matters</p>
+			<p class="font-sans text-body text-ink-soft leading-relaxed">
+				{clipToSentences(item.insightV1.whyThisMatters, 2)}
+			</p>
+			<p class={`${d.sectionLabel} mt-sp-4`}>How confident we are</p>
+			<div
+				class="h-2 w-full overflow-hidden rounded-sm bg-outline-variant"
+				role="meter"
+				aria-valuenow={item.insightV1.confidenceScore}
+				aria-valuemin={0}
+				aria-valuemax={100}
+				aria-label="How much reporting agrees, about {item.insightV1.confidenceScore} out of 100"
+			>
+				<div
+					class="h-full bg-event transition-[width] duration-veritas"
+					style="width: {Math.min(100, Math.max(0, item.insightV1.confidenceScore))}%"
+				></div>
+			</div>
+			<p class="mt-sp-3 font-sans text-body text-ink-soft leading-relaxed">
+				{confidenceNarrative(item.insightV1)}
+			</p>
+		</section>
+	{/if}
+
+	{#if item.eventEvolution}
+		{@const evo = evolutionNarrative(item.eventEvolution)}
+		<section class="border-l-2 border-topic bg-surface-low p-sp-4" aria-label="How this connects">
+			<p class={d.sectionLabel}>How this connects</p>
+			<p class="font-sans text-body text-ink-soft leading-relaxed">{evo.summary}</p>
+			{#if evo.contextLine}
+				<p class="mt-sp-3 font-sans text-body text-ink-soft leading-relaxed">{evo.contextLine}</p>
+			{/if}
+		</section>
+	{/if}
+
 	<section class={d.signalMeters} aria-label="Signal strength">
 		<div class={d.meterGroup}>
 			<span class={d.meterLabel}>Impact</span>
@@ -80,6 +137,15 @@
 	</section>
 
 	<section class={d.metaGrid} aria-label="Event metadata">
+		{#if lifecycleLine}
+			<MetadataRow label="Story phase" value={lifecycleLine} />
+		{/if}
+		{#if item.sourceReliabilityV1}
+			<MetadataRow
+				label="Source diversity"
+				value="{Math.round(item.sourceReliabilityV1.diversity * 100)}% · {item.sourceReliabilityV1.uniqueDomains} domains / {item.sourceReliabilityV1.articleCount} articles"
+			/>
+		{/if}
 		{#if sentiment != null}
 			<MetadataRow label="Sentiment index" value={String(sentiment)} />
 		{/if}
@@ -98,6 +164,22 @@
 					<TagChip label={kw} variant="neutral" />
 				{/each}
 			</div>
+		</section>
+	{/if}
+
+	{#if item.sourceReliabilityV1?.topDomains?.length}
+		<section class={d.chipSection} aria-label="Sources by domain">
+			<p class={d.sectionLabel}>Sources by domain</p>
+			<ul class="m-0 list-none space-y-sp-2 p-0 font-sans text-body text-ink-soft">
+				{#each item.sourceReliabilityV1.topDomains as row (row.domain)}
+					<li class="flex justify-between gap-sp-4 border-b border-outline-variant/40 pb-sp-2 last:border-0">
+						<span class="min-w-0 truncate text-ink">{row.domain}</span>
+						<span class="shrink-0 tabular-nums text-ink-muted"
+							>{row.count} · {Math.round(row.share * 100)}%</span
+						>
+					</li>
+				{/each}
+			</ul>
 		</section>
 	{/if}
 

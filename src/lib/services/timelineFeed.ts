@@ -13,13 +13,20 @@ export interface FeedPage {
 	nextCursor: string | null;
 }
 
+/** Optional `personalUserId` narrows unified timeline to follows (server-side). */
 export async function fetchFeedPage(
 	fetcher: typeof fetch,
 	scope: TimelineScope,
-	cursor: string | null
+	cursor: string | null,
+	opts?: { personalUserId?: string }
 ): Promise<FeedPage> {
 	if (scope === 'unified') {
-		const p = await listTimeline(fetcher, cursor ? { cursor, limit: 30 } : { limit: 30 });
+		const base = cursor ? { cursor, limit: 30 } : { limit: 30 };
+		const params =
+			opts?.personalUserId != null && opts.personalUserId !== ''
+				? { ...base, personalUserId: opts.personalUserId }
+				: base;
+		const p = await listTimeline(fetcher, params);
 		return {
 			items: p.items,
 			hasMore: p.pageInfo.hasMore,
