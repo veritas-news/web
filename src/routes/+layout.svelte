@@ -2,6 +2,7 @@
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.ico';
 	import SiteHeader from '$lib/components/layout/SiteHeader.svelte';
+	import SiteFooter from '$lib/components/layout/SiteFooter.svelte';
 	import AlertSignalToast from '$lib/components/realtime/AlertSignalToast.svelte';
 
 	let { children } = $props();
@@ -12,7 +13,7 @@
 	<title>Veritas</title>
 </svelte:head>
 
-<div class="grid min-h-screen grid-rows-[auto_1fr]">
+<div class="grid min-h-screen grid-rows-[auto_1fr_auto]">
 	<SiteHeader />
 	<main class="relative isolate min-h-0 min-w-0">
 		<div
@@ -23,5 +24,6 @@
 			{@render children()}
 		</div>
 	</main>
+	<SiteFooter />
 	<AlertSignalToast />
 </div>
