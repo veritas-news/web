@@ -51,7 +51,9 @@
 				<span>· impact {rel.preview.impactScore}</span>
 			{/if}
 			<span>· {rel.relationshipSourceV1}</span>
-			<span class="font-mono">· {rel.targetId}</span>
+			{#if !rel.preview?.title}
+				<span class="font-mono">· {rel.targetId}</span>
+			{/if}
 		</p>
 	{:else}
 		<div class="flex items-baseline justify-between gap-sp-3">
