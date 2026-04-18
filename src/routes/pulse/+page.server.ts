@@ -1,18 +1,22 @@
-import { getApiStatus } from '$lib/api/status';
+import { describeAPIError } from '$lib/api/client';
 import { fetchOpenMeteoCurrent } from '$lib/api/openMeteo';
-import { fetchNasaApod } from '$lib/api/nasaApod';
-import type { ApiStatusPayload } from '$lib/api/status';
+import { getDashboardPulse } from '$lib/api/pulse';
+import { getApiStatus } from '$lib/api/status';
 import type { OpenMeteoCurrent } from '$lib/api/openMeteo';
-import type { NasaApod } from '$lib/api/nasaApod';
+import type { ApiStatusPayload } from '$lib/api/status';
+import type { DashboardPulseData } from '$lib/types/pulse';
 import type { PageServerLoad } from './$types';
+
+const PULSE_WINDOW_HOURS = 24;
+const PULSE_LIMIT = 10;
 
 export interface PulsePageData {
 	api: ApiStatusPayload | null;
 	apiErr: string | null;
 	weather: OpenMeteoCurrent | null;
 	weatherErr: string | null;
-	apod: NasaApod | null;
-	apodErr: string | null;
+	pulse: DashboardPulseData | null;
+	pulseErr: string | null;
 }
 
 function errMessage(reason: unknown): string {
@@ -22,10 +26,14 @@ function errMessage(reason: unknown): string {
 
 /** Server-only: Veritas `/v1` has no browser CORS; avoid client `load` re-running fetches from the browser. */
 export const load: PageServerLoad = async ({ fetch }): Promise<PulsePageData> => {
-	const [api, weather, apod] = await Promise.allSettled([
+	const [api, weather, pulse] = await Promise.allSettled([
 		getApiStatus(fetch),
 		fetchOpenMeteoCurrent(fetch, { lat: 52.52, lon: 13.41 }),
-		fetchNasaApod(fetch)
+		getDashboardPulse(fetch, {
+			windowHours: PULSE_WINDOW_HOURS,
+			limit: PULSE_LIMIT,
+			mode: 'pulse'
+		})
 	]);
 
 	return {
@@ -33,7 +41,10 @@ export const load: PageServerLoad = async ({ fetch }): Promise<PulsePageData> =>
 		apiErr: api.status === 'rejected' ? errMessage(api.reason) : null,
 		weather: weather.status === 'fulfilled' ? weather.value : null,
 		weatherErr: weather.status === 'rejected' ? errMessage(weather.reason) : null,
-		apod: apod.status === 'fulfilled' ? apod.value : null,
-		apodErr: apod.status === 'rejected' ? errMessage(apod.reason) : null
+		pulse: pulse.status === 'fulfilled' ? pulse.value : null,
+		pulseErr:
+			pulse.status === 'rejected'
+				? describeAPIError(pulse.reason, { fallback: 'Pulse unavailable.' })
+				: null
 	};
 };

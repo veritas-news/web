@@ -16,6 +16,7 @@ export type RealtimeEventType =
 	| 'event.updated'
 	| 'event.merged'
 	| 'hierarchy.updated'
+	| 'alert.signal'
 	| (string & {});
 
 export interface RealtimeMessage {

@@ -5,15 +5,12 @@
 
 	const links = [
 		{ href: '/', label: 'Unified' },
-		{ href: '/events', label: 'Events' },
-		{ href: '/topics', label: 'Topics' },
-		{ href: '/global', label: 'Global' },
 		{ href: '/articles', label: 'Articles' },
-		{ href: '/sources', label: 'Sources' },
+		{ href: '/saved', label: 'Bookmarks' },
 		{ href: '/search', label: 'Search' },
-		{ href: '/saved', label: 'Saved' },
 		{ href: '/pulse', label: 'Pulse' },
-		{ href: '/about', label: 'About' }
+		{ href: '/alerts', label: 'Alerts' },
+		{ href: '/map', label: 'Map' }
 	] as const;
 
 	let menuOpen = $state(false);

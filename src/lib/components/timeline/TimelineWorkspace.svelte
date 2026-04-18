@@ -150,7 +150,8 @@
 			msg.type === 'event.created' ||
 			msg.type === 'event.updated' ||
 			msg.type === 'event.merged' ||
-			msg.type === 'hierarchy.updated'
+			msg.type === 'hierarchy.updated' ||
+			msg.type === 'alert.signal'
 		);
 	}
 

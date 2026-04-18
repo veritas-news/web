@@ -2,6 +2,7 @@
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.ico';
 	import SiteHeader from '$lib/components/layout/SiteHeader.svelte';
+	import AlertSignalToast from '$lib/components/realtime/AlertSignalToast.svelte';
 
 	let { children } = $props();
 </script>
@@ -22,4 +23,5 @@
 			{@render children()}
 		</div>
 	</main>
+	<AlertSignalToast />
 </div>

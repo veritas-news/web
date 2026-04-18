@@ -60,7 +60,7 @@
 				>/v1</code
 			>: timelines, detail payloads with embedded articles, full-text search, article catalog, and crawler
 			<strong class="font-semibold text-ink">sources</strong>. Pulse adds optional third-party JSON checks (weather,
-			APOD, API clock).
+			API clock).
 		</p>
 		<p class="m-0">
 			<strong class="font-semibold text-ink">Saved</strong> items live in your browser only—use them as a lightweight reading list while you triage a noisy day.

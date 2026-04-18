@@ -1,4 +1,5 @@
 <script lang="ts">
+	import PulseItemList from '$lib/components/pulse/PulseItemList.svelte';
 	import ErrorMessage from '$lib/components/ui/ErrorMessage.svelte';
 	import type { PageProps } from './$types';
 
@@ -25,7 +26,7 @@
 	<title>Pulse — Veritas</title>
 	<meta
 		name="description"
-		content="Live API status, Berlin weather (Open-Meteo), and NASA Astronomy Picture of the Day."
+		content="Veritas dashboard pulse plus live API status and Berlin weather (Open-Meteo)."
 	/>
 </svelte:head>
 
@@ -34,10 +35,42 @@
 		<p class="m-0 font-sans text-label font-bold tracking-[0.08em] text-global uppercase">Field desk</p>
 		<h1 class="mt-sp-1 mb-0 font-serif text-headline font-semibold">Pulse</h1>
 		<p class="mt-sp-2 mb-0 max-w-[62ch] leading-[1.65] text-ink-soft">
-			Veritas API clock plus free public feeds: Open-Meteo (Berlin) and NASA APOD. Useful sanity check that the
-			browser can reach third-party JSON endpoints.
+			Veritas pulse plus API clock and Open-Meteo (Berlin)—a quick check that the browser can reach public JSON
+			endpoints alongside <code class="text-[0.9em] text-event">/v1</code>.
 		</p>
 	</header>
+
+	<section class="grid gap-sp-3 border border-outline-variant bg-surface-low p-sp-4">
+		<header class="flex flex-wrap items-baseline justify-between gap-sp-2">
+			<h2 class="m-0 font-serif text-[1.2rem]">Veritas pulse</h2>
+			{#if data.pulse}
+				<p class="m-0 font-mono text-[0.8rem] tabular-nums text-ink-muted">
+					{data.pulse.window_start} → {data.pulse.window_end} · {data.pulse.mode}
+				</p>
+			{/if}
+		</header>
+
+		{#if data.pulseErr}
+			<ErrorMessage title="Pulse" message={data.pulseErr} />
+		{:else if data.pulse}
+			<div class="grid gap-sp-4 lg:grid-cols-2">
+				<div class="grid gap-sp-2">
+					<h3 class="m-0 font-sans text-label font-bold uppercase tracking-[0.08em] text-topic">
+						Topics
+					</h3>
+					<PulseItemList items={data.pulse.topics} empty="No topic pulse." />
+				</div>
+				<div class="grid gap-sp-2">
+					<h3 class="m-0 font-sans text-label font-bold uppercase tracking-[0.08em] text-global">
+						Globals
+					</h3>
+					<PulseItemList items={data.pulse.globals} empty="No global pulse." />
+				</div>
+			</div>
+		{:else}
+			<p class="m-0 font-sans text-body text-ink-muted">No pulse data.</p>
+		{/if}
+	</section>
 
 	<div class="grid gap-sp-4 lg:grid-cols-2">
 		<section class="grid content-start gap-sp-2 border border-outline-variant bg-surface-low p-sp-4">
@@ -70,26 +103,5 @@
 			{/if}
 		</section>
 
-		<section class="grid content-start gap-sp-2 border border-outline-variant bg-surface-low p-sp-4 lg:col-span-2">
-			<h2 class="m-0 font-serif text-[1.2rem]">NASA APOD</h2>
-			<p class="m-0 font-sans text-label tracking-[0.06em] text-ink-muted uppercase">Planetary APOD · demo key</p>
-			{#if data.apodErr}
-				<ErrorMessage title="APOD" message={data.apodErr} />
-			{:else if data.apod}
-				<h3 class="m-0 text-[1.15rem] font-semibold">{data.apod.title}</h3>
-				<p class="m-0 font-mono text-[0.95rem] text-ink-muted">
-					{data.apod.date}{#if data.apod.copyright} · {data.apod.copyright}{/if}
-				</p>
-				<img
-					class="max-h-[22rem] w-full border border-outline-variant object-cover"
-					src={data.apod.imageUrl}
-					alt=""
-					loading="lazy"
-				/>
-				<p class="m-0 line-clamp-8 leading-[1.65] text-ink-soft">{data.apod.explanation}</p>
-			{:else}
-				<p class="m-0 font-sans text-body text-ink-muted">No data.</p>
-			{/if}
-		</section>
 	</div>
 </div>

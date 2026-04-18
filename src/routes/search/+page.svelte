@@ -1,4 +1,5 @@
 <script lang="ts">
+	import SearchFiltersForm from '$lib/components/search/SearchFiltersForm.svelte';
 	import ErrorMessage from '$lib/components/ui/ErrorMessage.svelte';
 	import TagChip from '$lib/components/ui/TagChip.svelte';
 	import { formatCompactNumber, formatDateTime } from '$lib/utils/format';
@@ -20,25 +21,11 @@
 			Query events and articles (minimum 2 characters). Uses <code class="text-[0.9em] text-event">GET /v1/search</code>.
 		</p>
 
-		<form class="mt-sp-2 flex flex-wrap gap-sp-2" method="get" action="/search">
-			<label class="sr-only" for="q">Search query</label>
-			<input
-				id="q"
-				name="q"
-				type="search"
-				class="min-w-0 flex-[1_1_16rem] border border-outline-variant bg-surface-low px-sp-3 py-sp-3 text-ink"
-				placeholder="e.g. election, climate, …"
-				value={data.q}
-				autocomplete="off"
-				minlength="2"
-				maxlength="200"
-			/>
-			<button
-				type="submit"
-				class="border border-outline-variant bg-ink px-sp-5 py-sp-3 font-sans text-label font-bold tracking-[0.06em] text-surface uppercase hover:opacity-92"
-				>Search</button
-			>
-		</form>
+		<SearchFiltersForm q={data.q} filters={data.filters} />
+		<p class="m-0 font-sans text-label text-ink-muted">
+			Filters apply to event hits only (server-enforced via
+			<code class="text-[0.9em] text-event">GET /v1/search</code>).
+		</p>
 	</header>
 
 	{#if data.searchError}

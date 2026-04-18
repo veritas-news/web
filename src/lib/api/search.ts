@@ -1,18 +1,34 @@
 import { readEnvelope } from '$lib/api/client';
+import type { QueryParams } from '$lib/types/api';
 import type { Article } from '$lib/types/article';
-import type { SearchEventHit, SearchMeta, SearchResult } from '$lib/types/search';
+import type {
+	SearchEventHit,
+	SearchFilters,
+	SearchMeta,
+	SearchResult
+} from '$lib/types/search';
+
+function buildSearchParams(q: string, opts: SearchFilters): QueryParams {
+	const params: QueryParams = {
+		q,
+		type: opts.type ?? 'all',
+		limit: opts.limit ?? 20
+	};
+	if (opts.minConviction != null) params.min_conviction = opts.minConviction;
+	if (opts.impactScope) params.impact_scope = opts.impactScope;
+	if (opts.eventState) params.event_state = opts.eventState;
+	return params;
+}
 
 export async function search(
 	fetcher: typeof fetch,
 	q: string,
-	opts: { type?: 'all' | 'event' | 'article'; limit?: number } = {}
+	opts: SearchFilters = {}
 ): Promise<SearchResult> {
-	const type = opts.type ?? 'all';
-	const limit = opts.limit ?? 20;
 	const env = await readEnvelope<{ events: SearchEventHit[]; articles: Article[] }, SearchMeta>(
 		fetcher,
 		'/search',
-		{ q, type, limit }
+		buildSearchParams(q, opts)
 	);
 	return {
 		events: env.data.events ?? [],

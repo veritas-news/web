@@ -1,4 +1,5 @@
 <script lang="ts">
+	import RelationshipsSection from '$lib/components/detail/RelationshipsSection.svelte';
 	import TagChip from '$lib/components/ui/TagChip.svelte';
 	import MetadataRow from '$lib/components/ui/MetadataRow.svelte';
 	import ArticleRow from '$lib/components/ui/ArticleRow.svelte';
@@ -86,4 +87,6 @@
 			</div>
 		</section>
 	{/if}
+
+	<RelationshipsSection surface="global" id={item.id} />
 </article>
