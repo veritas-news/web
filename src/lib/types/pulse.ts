@@ -1,15 +1,19 @@
-export type PulseMode = 'pulse' | 'relevance_gap';
+export type PulseMode = 'pulse' | 'relevance_gap' | 'impact';
 export type PulseItemType = 'topic_event' | 'global_event';
 
 export interface PulseItem {
 	id: string;
 	type: PulseItemType;
 	title: string;
+	impactScore: number;
 	pulse_score_v1: number;
 	relevance_gap_v1: number;
+	velocity_score_v1?: number;
 	impactScopeV1?: string;
 	article_count_in_window: number;
 	metricVersions?: Record<string, string>;
+	/** Present when API includes explain maps (e.g. velocity) */
+	scoreExplain?: Record<string, unknown>;
 }
 
 export interface PulseData {

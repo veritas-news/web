@@ -5,6 +5,15 @@
 	import ArticleRow from '$lib/components/ui/ArticleRow.svelte';
 	import { detail as d } from '$lib/ui/detailClasses';
 	import type { EventDetail } from '$lib/types/event';
+	import {
+		labelConvictionBand,
+		bandFromConvictionScore,
+		labelImpactBand,
+		bandFromImpactScore,
+		sentimentDisplay,
+		titleConvictionScore,
+		titleImpactScore
+	} from '$lib/metrics/displayBands';
 	import { formatCompactNumber, formatDateTime } from '$lib/utils/format';
 	import { supportingArticlesSortedByImage } from '$lib/utils/articleDisplay';
 	import { clipToSentences, confidenceNarrative, evolutionNarrative } from '$lib/utils/detailInsights';
@@ -114,11 +123,13 @@
 				aria-valuenow={impact}
 				aria-valuemin={0}
 				aria-valuemax={100}
-				aria-label="Impact score {impact}"
+				aria-label="Impact {labelImpactBand(bandFromImpactScore(impact))}"
 			>
 				<div class="h-full bg-event transition-[width] duration-veritas" style="width: {impact}%"></div>
 			</div>
-			<span class={d.meterVal}>{impact}</span>
+			<span class={d.meterVal} title={titleImpactScore(impact)}>{labelImpactBand(
+					bandFromImpactScore(impact)
+				)}</span>
 		</div>
 		<div class={d.meterGroup}>
 			<span class={d.meterLabel}>Conviction</span>
@@ -128,11 +139,13 @@
 				aria-valuenow={conviction}
 				aria-valuemin={0}
 				aria-valuemax={100}
-				aria-label="Analyst conviction {conviction}%"
+				aria-label="Conviction {labelConvictionBand(bandFromConvictionScore(conviction))}"
 			>
 				<div class="h-full bg-event transition-[width] duration-veritas" style="width: {conviction}%"></div>
 			</div>
-			<span class={d.meterVal}>{conviction}%</span>
+			<span class={d.meterVal} title={titleConvictionScore(conviction)}>{labelConvictionBand(
+					bandFromConvictionScore(conviction)
+				)}</span>
 		</div>
 	</section>
 
@@ -147,7 +160,7 @@
 			/>
 		{/if}
 		{#if sentiment != null}
-			<MetadataRow label="Sentiment index" value={String(sentiment)} />
+			<MetadataRow label="Sentiment" value={sentimentDisplay(sentiment)} />
 		{/if}
 		<MetadataRow label="Cluster size" value={formatCompactNumber(item.clusterSize)} />
 		<MetadataRow label="Sources" value={formatCompactNumber(item.sourceCount)} />

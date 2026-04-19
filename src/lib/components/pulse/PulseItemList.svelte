@@ -1,5 +1,13 @@
 <script lang="ts">
 	import TagChip from '$lib/components/ui/TagChip.svelte';
+	import {
+		formatPulseLine,
+		formatRelevanceGapLine,
+		formatVelocityLine,
+		titlePulseScore,
+		titleRelevanceGap,
+		titleVelocityScore
+	} from '$lib/metrics/displayBands';
 	import type { PulseItem } from '$lib/types/pulse';
 
 	interface Props {
@@ -34,10 +42,22 @@
 				>
 				<p class="m-0 flex flex-wrap gap-sp-2 font-sans text-label text-ink-muted">
 					<TagChip
-						label={`pulse ${item.pulse_score_v1.toFixed(2)}`}
+						label={formatPulseLine(item.pulse_score_v1)}
 						variant={item.type === 'global_event' ? 'global' : 'topic'}
+						title={titlePulseScore(item.pulse_score_v1)}
 					/>
-					<TagChip label={`gap ${item.relevance_gap_v1}`} variant="neutral" />
+					<TagChip
+						label={formatRelevanceGapLine(item.relevance_gap_v1)}
+						variant="neutral"
+						title={titleRelevanceGap(item.relevance_gap_v1)}
+					/>
+					{#if item.velocity_score_v1 != null}
+						<TagChip
+							label={formatVelocityLine(item.velocity_score_v1)}
+							variant="neutral"
+							title={titleVelocityScore(item.velocity_score_v1)}
+						/>
+					{/if}
 					{#if item.impactScopeV1}
 						<TagChip label={item.impactScopeV1} variant={scopeVariant(item.impactScopeV1)} />
 					{/if}

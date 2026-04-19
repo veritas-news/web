@@ -1,4 +1,12 @@
 <script lang="ts">
+	import {
+		bandFromConvictionScore,
+		labelConvictionBand,
+		labelImpactBand,
+		bandFromImpactScore,
+		titleConvictionScore,
+		titleImpactScore
+	} from '$lib/metrics/displayBands';
 	import type { TimelineCardModel } from '$lib/types/timeline';
 	import { cn } from '$lib/cn';
 
@@ -144,8 +152,8 @@
 			? 'grid-cols-[1fr_auto]'
 			: 'grid-cols-1 justify-items-end'}"
 		aria-label={card.analystConviction != null
-			? `Impact ${card.impactScore}, conviction ${card.analystConviction}%`
-			: `Impact ${card.impactScore}`}
+			? `Impact ${labelImpactBand(bandFromImpactScore(card.impactScore))}, conviction ${labelConvictionBand(bandFromConvictionScore(card.analystConviction))}`
+			: `Impact ${labelImpactBand(bandFromImpactScore(card.impactScore))}`}
 	>
 		{#if card.analystConviction != null}
 			<div class="min-w-0">
@@ -159,8 +167,11 @@
 							style="width: {Math.min(100, card.analystConviction)}%"
 						></div>
 					</div>
-					<span class="min-w-[2.25rem] text-right font-sans text-label font-bold tabular-nums text-ink-soft"
-						>{Math.round(card.analystConviction)}%</span
+					<span
+						class="min-w-[2.25rem] text-right font-sans text-label font-bold text-ink-soft"
+						title={titleConvictionScore(card.analystConviction)}>{labelConvictionBand(
+							bandFromConvictionScore(card.analystConviction)
+						)}</span
 					>
 				</div>
 			</div>
@@ -169,7 +180,9 @@
 			class="grid min-w-[4.5rem] justify-items-end gap-0.5 border border-outline-variant bg-surface/55 px-sp-2 py-sp-1"
 		>
 			<span class="text-[0.55rem] font-bold uppercase tracking-[0.12em] text-ink-muted">Impact</span>
-			<span class={impactValClass}>{card.impactScore}</span>
+			<span class={impactValClass} title={titleImpactScore(card.impactScore)}>{labelImpactBand(
+					bandFromImpactScore(card.impactScore)
+				)}</span>
 		</div>
 	</div>
 </button>

@@ -84,5 +84,86 @@
 				placeholder="e.g. 50"
 			/>
 		</label>
+
+		<label class={labelCls}>
+			<span>Max conviction</span>
+			<input
+				type="number"
+				name="max_conviction"
+				min="0"
+				max="100"
+				step="1"
+				class={inputCls}
+				value={filters.maxConviction ?? ''}
+				placeholder="optional"
+			/>
+		</label>
+
+		<label class={labelCls}>
+			<span>Min impact</span>
+			<input
+				type="number"
+				name="min_impact"
+				min="0"
+				max="100"
+				step="1"
+				class={inputCls}
+				value={filters.minImpact ?? ''}
+				placeholder="optional"
+			/>
+		</label>
+
+		<label class={labelCls}>
+			<span>Max impact</span>
+			<input
+				type="number"
+				name="max_impact"
+				min="0"
+				max="100"
+				step="1"
+				class={inputCls}
+				value={filters.maxImpact ?? ''}
+				placeholder="optional"
+			/>
+		</label>
+
+		<label class={labelCls}>
+			<span>Happened after (RFC3339)</span>
+			<input
+				type="text"
+				name="happened_after"
+				class={inputCls}
+				value={filters.happenedAfter ?? ''}
+				placeholder="2026-01-01T00:00:00Z"
+			/>
+		</label>
+
+		<label class={labelCls}>
+			<span>Happened before</span>
+			<input
+				type="text"
+				name="happened_before"
+				class={inputCls}
+				value={filters.happenedBefore ?? ''}
+				placeholder="optional"
+			/>
+		</label>
+
+		<label class={labelCls}>
+			<span>Country (ISO-2)</span>
+			<input
+				type="text"
+				name="country"
+				maxlength="2"
+				class={inputCls}
+				value={filters.country ?? ''}
+				placeholder="DE"
+			/>
+		</label>
+
+		<label class={labelCls}>
+			<span>Entity id</span>
+			<input type="text" name="entity_id" class={inputCls} value={filters.entityId ?? ''} placeholder="optional" />
+		</label>
 	</fieldset>
 </form>

@@ -2,13 +2,14 @@
 	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 	import { cn } from '$lib/cn';
+	import AuthButton from '$lib/components/auth/AuthButton.svelte';
 
 	const links = [
 		{ href: '/', label: 'Unified' },
 		{ href: '/articles', label: 'Articles' },
 		{ href: '/saved', label: 'Bookmarks' },
 		{ href: '/search', label: 'Search' },
-		{ href: '/pulse', label: 'Pulse' },
+		{ href: '/pulse', label: 'Briefing' },
 		{ href: '/alerts', label: 'Alerts' },
 		{ href: '/map', label: 'Map' }
 	] as const;
@@ -110,27 +111,30 @@
 			</div>
 		</div>
 
-		<nav class="hidden min-w-0 md:block" aria-label="Primary">
-			<ul class="m-0 flex list-none flex-wrap items-center justify-end gap-sp-1 p-0">
-				{#each links as item (item.href)}
-					<li>
-						<a
-							href={item.href}
-							class={cn(
-								'block rounded-sm border border-transparent px-sp-2 py-sp-2 font-sans text-label font-semibold uppercase tracking-wide text-ink-soft no-underline transition-[border-color,color,background,box-shadow] duration-veritas-slow ease-veritas-out',
-								'hover:border-outline-variant/90 hover:bg-event/[0.07] hover:text-ink hover:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.03)]',
-								isActive(item.href, page.url.pathname) &&
-									'border-event/45 bg-[linear-gradient(180deg,rgb(195_199_204/0.12)_0%,rgb(195_199_204/0.04)_100%)] text-event shadow-[0_0_20px_rgb(195_199_204/0.06),inset_0_0_0_1px_rgb(255_255_255/0.04)]'
-							)}
-							data-sveltekit-preload-data="hover"
-							aria-current={isActive(item.href, page.url.pathname) ? 'page' : undefined}
-						>
-							{item.label}
-						</a>
-					</li>
-				{/each}
-			</ul>
-		</nav>
+		<div class="hidden min-w-0 items-center gap-sp-3 md:flex">
+			<nav class="min-w-0" aria-label="Primary">
+				<ul class="m-0 flex list-none flex-wrap items-center justify-end gap-sp-1 p-0">
+					{#each links as item (item.href)}
+						<li>
+							<a
+								href={item.href}
+								class={cn(
+									'block rounded-sm border border-transparent px-sp-2 py-sp-2 font-sans text-label font-semibold uppercase tracking-wide text-ink-soft no-underline transition-[border-color,color,background,box-shadow] duration-veritas-slow ease-veritas-out',
+									'hover:border-outline-variant/90 hover:bg-event/[0.07] hover:text-ink hover:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.03)]',
+									isActive(item.href, page.url.pathname) &&
+										'border-event/45 bg-[linear-gradient(180deg,rgb(195_199_204/0.12)_0%,rgb(195_199_204/0.04)_100%)] text-event shadow-[0_0_20px_rgb(195_199_204/0.06),inset_0_0_0_1px_rgb(255_255_255/0.04)]'
+								)}
+								data-sveltekit-preload-data="hover"
+								aria-current={isActive(item.href, page.url.pathname) ? 'page' : undefined}
+							>
+								{item.label}
+							</a>
+						</li>
+					{/each}
+				</ul>
+			</nav>
+			<AuthButton />
+		</div>
 	</div>
 
 	{#if menuOpen}
@@ -194,6 +198,9 @@
 							</li>
 						{/each}
 					</ul>
+					<div class="mt-sp-4 border-t border-outline-variant/70 pt-sp-4">
+						<AuthButton />
+					</div>
 				</nav>
 			</div>
 		</div>

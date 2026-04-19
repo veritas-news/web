@@ -54,16 +54,82 @@
 	let clusters = $state<MapClusterItem[]>([]);
 	let currentZoom = $state(INITIAL_ZOOM);
 
+	/** Applied server filters (time window + conviction). */
+	let appliedMapFilters = $state<{
+		timeStart?: string;
+		timeEnd?: string;
+		minConviction?: number;
+		maxConviction?: number;
+	}>({});
+	let draftTimeStart = $state('');
+	let draftTimeEnd = $state('');
+	let draftMinConviction = $state('');
+	let draftMaxConviction = $state('');
+
+	function applyMapFilters() {
+		const timeStart = draftTimeStart.trim() || undefined;
+		const timeEnd = draftTimeEnd.trim() || undefined;
+		let minConviction: number | undefined;
+		let maxConviction: number | undefined;
+		if (draftMinConviction.trim() !== '') {
+			const n = Number(draftMinConviction);
+			if (!Number.isFinite(n) || n < 0 || n > 100) {
+				errorMsg = 'Min conviction must be 0–100.';
+				return;
+			}
+			minConviction = n;
+		}
+		if (draftMaxConviction.trim() !== '') {
+			const n = Number(draftMaxConviction);
+			if (!Number.isFinite(n) || n < 0 || n > 100) {
+				errorMsg = 'Max conviction must be 0–100.';
+				return;
+			}
+			maxConviction = n;
+		}
+		if (
+			minConviction != null &&
+			maxConviction != null &&
+			maxConviction < minConviction
+		) {
+			errorMsg = 'Max conviction must be ≥ min conviction.';
+			return;
+		}
+		errorMsg = null;
+		appliedMapFilters = { timeStart, timeEnd, minConviction, maxConviction };
+		lastKey = '';
+		if (!mapInstance) return;
+		const b = mapInstance.getBounds();
+		const bbox = bboxFromBounds(b.getSouth(), b.getNorth(), b.getWest(), b.getEast());
+		void loadData(bbox, currentZoom);
+	}
+
+	function clearMapFilters() {
+		draftTimeStart = '';
+		draftTimeEnd = '';
+		draftMinConviction = '';
+		draftMaxConviction = '';
+		appliedMapFilters = {};
+		errorMsg = null;
+		lastKey = '';
+		if (!mapInstance) return;
+		const b = mapInstance.getBounds();
+		const bbox = bboxFromBounds(b.getSouth(), b.getNorth(), b.getWest(), b.getEast());
+		void loadData(bbox, currentZoom);
+	}
+
 	async function loadData(bbox: MapBBox, zoom: number) {
-		const key = keyFor({ bbox, zoom });
+		const key = keyFor({ bbox, zoom, ...appliedMapFilters });
 		if (key === lastKey) return;
 		lastKey = key;
 		loading = true;
 		errorMsg = null;
 		try {
 			const [evData, heatData] = await Promise.all([
-				fetchMapEvents(fetch, { bbox, zoom }),
-				showHeatmap ? fetchMapHeatmap(fetch, { bbox, zoom, grid: 16 }) : Promise.resolve(null)
+				fetchMapEvents(fetch, { bbox, zoom, ...appliedMapFilters }),
+				showHeatmap
+					? fetchMapHeatmap(fetch, { bbox, zoom, grid: 16, ...appliedMapFilters })
+					: Promise.resolve(null)
 			]);
 			applyEvents(evData, zoom);
 			if (heatData) applyHeatmap(heatData);
@@ -106,7 +172,8 @@
 					imageUrl: p.imageUrl ?? '',
 					impactScore: p.impactScore,
 					articleDensity: p.articleDensity,
-					analystConviction: p.analystConviction
+					analystConviction: p.analystConviction,
+					...(p.velocityScoreV1 != null ? { velocityScoreV1: p.velocityScoreV1 } : {})
 				}
 			}))
 		});
@@ -328,6 +395,72 @@
 
 <div class="relative h-full min-h-0 w-full overflow-hidden bg-[#0e0e10]">
 	<div bind:this={mapEl} class="absolute inset-0 h-full w-full" aria-label="Interactive map"></div>
+
+	<div
+		class="pointer-events-auto absolute left-[max(0.75rem,env(safe-area-inset-left))] bottom-[max(6.5rem,env(safe-area-inset-bottom))] z-20 max-w-[min(100%,20rem)] rounded-sm border border-white/12 bg-[#141418]/95 p-sp-3 font-sans text-body text-ink shadow-[0_4px_24px_rgb(0_0_0/0.45)] backdrop-blur-md"
+	>
+		<p class="mb-sp-2 text-label font-semibold uppercase tracking-wide text-ink-muted">Time &amp; conviction</p>
+		<div class="grid grid-cols-1 gap-sp-2 sm:grid-cols-2">
+			<label class="flex flex-col gap-1 text-label text-ink-muted">
+				<span>time_start</span>
+				<input
+					class="rounded border border-white/15 bg-[#0e0e10] px-sp-2 py-1 text-body text-ink"
+					type="text"
+					autocomplete="off"
+					placeholder="2025-04-01T00:00:00Z"
+					bind:value={draftTimeStart}
+				/>
+			</label>
+			<label class="flex flex-col gap-1 text-label text-ink-muted">
+				<span>time_end</span>
+				<input
+					class="rounded border border-white/15 bg-[#0e0e10] px-sp-2 py-1 text-body text-ink"
+					type="text"
+					autocomplete="off"
+					placeholder="2025-04-30T23:59:59Z"
+					bind:value={draftTimeEnd}
+				/>
+			</label>
+			<label class="flex flex-col gap-1 text-label text-ink-muted">
+				<span>min conviction</span>
+				<input
+					class="rounded border border-white/15 bg-[#0e0e10] px-sp-2 py-1 text-body text-ink"
+					type="text"
+					inputmode="numeric"
+					autocomplete="off"
+					placeholder="0–100"
+					bind:value={draftMinConviction}
+				/>
+			</label>
+			<label class="flex flex-col gap-1 text-label text-ink-muted">
+				<span>max conviction</span>
+				<input
+					class="rounded border border-white/15 bg-[#0e0e10] px-sp-2 py-1 text-body text-ink"
+					type="text"
+					inputmode="numeric"
+					autocomplete="off"
+					placeholder="0–100"
+					bind:value={draftMaxConviction}
+				/>
+			</label>
+		</div>
+		<div class="mt-sp-3 flex flex-wrap gap-sp-2">
+			<button
+				type="button"
+				class="rounded border border-white/20 bg-event/20 px-sp-3 py-1 text-label font-semibold uppercase tracking-wide text-ink"
+				onclick={applyMapFilters}
+			>
+				Apply
+			</button>
+			<button
+				type="button"
+				class="rounded border border-white/12 bg-transparent px-sp-3 py-1 text-label font-semibold uppercase tracking-wide text-ink-muted"
+				onclick={clearMapFilters}
+			>
+				Clear
+			</button>
+		</div>
+	</div>
 
 	<label
 		class="pointer-events-auto absolute right-[max(0.75rem,env(safe-area-inset-right))] top-[max(0.75rem,env(safe-area-inset-top))] z-20 flex cursor-pointer items-center gap-sp-2 rounded-sm border border-white/12 bg-[#141418]/95 px-sp-3 py-sp-2 font-sans text-label font-semibold uppercase tracking-wide text-ink shadow-[0_4px_24px_rgb(0_0_0/0.45)] backdrop-blur-md"

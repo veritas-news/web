@@ -15,8 +15,15 @@ function buildSearchParams(q: string, opts: SearchFilters): QueryParams {
 		limit: opts.limit ?? 20
 	};
 	if (opts.minConviction != null) params.min_conviction = opts.minConviction;
+	if (opts.maxConviction != null) params.max_conviction = opts.maxConviction;
+	if (opts.minImpact != null) params.min_impact = opts.minImpact;
+	if (opts.maxImpact != null) params.max_impact = opts.maxImpact;
 	if (opts.impactScope) params.impact_scope = opts.impactScope;
 	if (opts.eventState) params.event_state = opts.eventState;
+	if (opts.happenedAfter) params.happened_after = opts.happenedAfter;
+	if (opts.happenedBefore) params.happened_before = opts.happenedBefore;
+	if (opts.country) params.country = opts.country;
+	if (opts.entityId) params.entity_id = opts.entityId;
 	return params;
 }
 

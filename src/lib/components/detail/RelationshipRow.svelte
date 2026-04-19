@@ -6,6 +6,7 @@
 		hasPreviewContent,
 		hrefForRelationship
 	} from '$lib/services/relationships';
+	import { formatImpactLine, titleImpactScore } from '$lib/metrics/displayBands';
 	import type { RelationshipRef } from '$lib/types/relationships';
 
 	interface Props {
@@ -48,7 +49,9 @@
 				<span>{date}</span>
 			{/if}
 			{#if typeof rel.preview?.impactScore === 'number'}
-				<span>· impact {rel.preview.impactScore}</span>
+				<span title={titleImpactScore(rel.preview.impactScore)}
+					>· {formatImpactLine(rel.preview.impactScore)}</span
+				>
 			{/if}
 			<span>· {rel.relationshipSourceV1}</span>
 			{#if !rel.preview?.title}

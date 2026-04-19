@@ -17,6 +17,10 @@ function buildBBoxParams(opts: MapQuery, includeGrid: boolean): QueryParams {
 	if (opts.topic) params.topic = opts.topic;
 	if (opts.category) params.category = opts.category;
 	if (includeGrid && opts.grid != null) params.grid = opts.grid;
+	if (opts.timeStart) params.time_start = opts.timeStart;
+	if (opts.timeEnd) params.time_end = opts.timeEnd;
+	if (opts.minConviction != null) params.min_conviction = opts.minConviction;
+	if (opts.maxConviction != null) params.max_conviction = opts.maxConviction;
 	return params;
 }
 

@@ -2,6 +2,7 @@
 	import SearchFiltersForm from '$lib/components/search/SearchFiltersForm.svelte';
 	import ErrorMessage from '$lib/components/ui/ErrorMessage.svelte';
 	import TagChip from '$lib/components/ui/TagChip.svelte';
+	import { formatImpactLine, titleImpactScore } from '$lib/metrics/displayBands';
 	import { formatCompactNumber, formatDateTime } from '$lib/utils/format';
 	import { articleDetailPath } from '$lib/utils/articleRouteId';
 	import type { PageProps } from './$types';
@@ -57,7 +58,7 @@
 								<p class="m-0 font-sans text-label text-ink-muted">
 									<span>{ev.category}</span>
 									·
-									<span>impact {formatCompactNumber(ev.impactScore)}</span>
+									<span title={titleImpactScore(ev.impactScore)}>{formatImpactLine(ev.impactScore)}</span>
 									·
 									<span>{formatDateTime(ev.happenedAt)}</span>
 								</p>

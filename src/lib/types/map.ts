@@ -19,6 +19,8 @@ export interface MapPinItem {
 	articleDensity: number;
 	relevanceGap: number;
 	analystConviction: number;
+	velocityScoreV1?: number;
+	scoreExplain?: Record<string, unknown>;
 	metricVersions?: Record<string, string>;
 	/**
 	 * Optional preview fields; populated only when the backend enriches
@@ -88,4 +90,10 @@ export interface MapQuery {
 	maxImpact?: number;
 	topic?: string;
 	category?: string;
+	/** RFC3339 */
+	timeStart?: string;
+	/** RFC3339 */
+	timeEnd?: string;
+	minConviction?: number;
+	maxConviction?: number;
 }

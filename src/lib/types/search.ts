@@ -36,6 +36,13 @@ export interface SearchFilters {
 	type?: SearchType;
 	limit?: number;
 	minConviction?: number | null;
+	maxConviction?: number | null;
+	minImpact?: number | null;
+	maxImpact?: number | null;
 	impactScope?: SearchImpactScope | null;
 	eventState?: SearchEventState | null;
+	happenedAfter?: string | null;
+	happenedBefore?: string | null;
+	country?: string | null;
+	entityId?: string | null;
 }

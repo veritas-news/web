@@ -6,6 +6,17 @@
 	import RelatedItemRow from '$lib/components/ui/RelatedItemRow.svelte';
 	import { detail as d } from '$lib/ui/detailClasses';
 	import type { TopicEventDetail } from '$lib/types/event';
+	import {
+		labelConvictionBand,
+		bandFromConvictionScore,
+		labelImpactBand,
+		bandFromImpactScore,
+		formatArticlesPerDay,
+		formatRelevanceGapLine,
+		sentimentDisplay,
+		titleConvictionScore,
+		titleImpactScore
+	} from '$lib/metrics/displayBands';
 	import { formatCompactNumber, formatDateRange, formatDateTime } from '$lib/utils/format';
 	import { supportingArticlesSortedByImage } from '$lib/utils/articleDisplay';
 
@@ -22,7 +33,7 @@
 	const sentiment = $derived.by(() => {
 		const s = item.sentimentIndex;
 		if (s == null || Number.isNaN(s)) return '—';
-		return Math.round(s * 100) / 100;
+		return sentimentDisplay(s);
 	});
 </script>
 
@@ -48,17 +59,35 @@
 	<section class={d.signalMeters} aria-label="Signal strength">
 		<div class={d.meterGroup}>
 			<span class={d.meterLabel}>Impact</span>
-			<div class={d.meterBar} role="meter" aria-valuenow={impact} aria-valuemin={0} aria-valuemax={100}>
+			<div
+				class={d.meterBar}
+				role="meter"
+				aria-valuenow={impact}
+				aria-valuemin={0}
+				aria-valuemax={100}
+				aria-label="Impact {labelImpactBand(bandFromImpactScore(impact))}"
+			>
 				<div class="h-full bg-topic transition-[width] duration-veritas" style="width: {impact}%"></div>
 			</div>
-			<span class={d.meterVal}>{impact}</span>
+			<span class={d.meterVal} title={titleImpactScore(impact)}>{labelImpactBand(
+					bandFromImpactScore(impact)
+				)}</span>
 		</div>
 		<div class={d.meterGroup}>
 			<span class={d.meterLabel}>Conviction</span>
-			<div class={d.meterBar} role="meter" aria-valuenow={conviction} aria-valuemin={0} aria-valuemax={100}>
+			<div
+				class={d.meterBar}
+				role="meter"
+				aria-valuenow={conviction}
+				aria-valuemin={0}
+				aria-valuemax={100}
+				aria-label="Conviction {labelConvictionBand(bandFromConvictionScore(conviction))}"
+			>
 				<div class="h-full bg-topic transition-[width] duration-veritas" style="width: {conviction}%"></div>
 			</div>
-			<span class={d.meterVal}>{conviction}%</span>
+			<span class={d.meterVal} title={titleConvictionScore(conviction)}>{labelConvictionBand(
+					bandFromConvictionScore(conviction)
+				)}</span>
 		</div>
 	</section>
 
@@ -67,8 +96,8 @@
 		<MetadataRow label="Size" value={formatCompactNumber(item.size)} />
 		<MetadataRow label="Articles" value={formatCompactNumber(item.articleCount)} />
 		<MetadataRow label="Sentiment" value={sentiment} />
-		<MetadataRow label="Article density" value={item.articleDensity.toFixed(2)} />
-		<MetadataRow label="Relevance gap" value={item.relevanceGap.toFixed(2)} />
+		<MetadataRow label="Article density" value={formatArticlesPerDay(item.articleDensity)} />
+		<MetadataRow label="Relevance gap" value={formatRelevanceGapLine(item.relevanceGap)} />
 		<MetadataRow label="Updated" value={formatDateTime(item.lastUpdatedAt)} />
 		<MetadataRow label="Generated" value={formatDateTime(item.generatedAt)} />
 	</section>

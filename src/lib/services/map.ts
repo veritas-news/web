@@ -75,9 +75,15 @@ export function impactFillOpacity(count: number, maxCount: number): number {
 export interface ViewportFetchKey {
 	bbox: MapBBox;
 	zoom: number;
+	/** Optional map API filters — must be part of the cache key when set. */
+	timeStart?: string;
+	timeEnd?: string;
+	minConviction?: number;
+	maxConviction?: number;
 }
 
 export function keyFor(v: ViewportFetchKey): string {
 	const r = (n: number) => n.toFixed(2);
-	return `${r(v.bbox.minLat)}|${r(v.bbox.maxLat)}|${r(v.bbox.minLng)}|${r(v.bbox.maxLng)}|${v.zoom}`;
+	const base = `${r(v.bbox.minLat)}|${r(v.bbox.maxLat)}|${r(v.bbox.minLng)}|${r(v.bbox.maxLng)}|${v.zoom}`;
+	return `${base}|t:${v.timeStart ?? ''}|${v.timeEnd ?? ''}|c:${v.minConviction ?? ''}|${v.maxConviction ?? ''}`;
 }

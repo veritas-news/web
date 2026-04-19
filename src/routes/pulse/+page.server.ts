@@ -1,20 +1,24 @@
 import { describeAPIError } from '$lib/api/client';
+import { getDailyBriefing } from '$lib/api/briefing';
 import { fetchOpenMeteoCurrent } from '$lib/api/openMeteo';
 import { getDashboardPulse } from '$lib/api/pulse';
 import { getApiStatus } from '$lib/api/status';
 import type { OpenMeteoCurrent } from '$lib/api/openMeteo';
 import type { ApiStatusPayload } from '$lib/api/status';
+import type { BriefingDailyData } from '$lib/types/briefing';
 import type { DashboardPulseData } from '$lib/types/pulse';
 import type { PageServerLoad } from './$types';
 
 const PULSE_WINDOW_HOURS = 24;
-const PULSE_LIMIT = 10;
+const DEFAULT_PULSE_LIMIT = 10;
 
 export interface PulsePageData {
 	api: ApiStatusPayload | null;
 	apiErr: string | null;
 	weather: OpenMeteoCurrent | null;
 	weatherErr: string | null;
+	briefing: BriefingDailyData | null;
+	briefingErr: string | null;
 	pulse: DashboardPulseData | null;
 	pulseErr: string | null;
 }
@@ -25,14 +29,29 @@ function errMessage(reason: unknown): string {
 }
 
 /** Server-only: Veritas `/v1` has no browser CORS; avoid client `load` re-running fetches from the browser. */
-export const load: PageServerLoad = async ({ fetch }): Promise<PulsePageData> => {
-	const [api, weather, pulse] = await Promise.allSettled([
+export const load: PageServerLoad = async ({ fetch, url }): Promise<PulsePageData> => {
+	const modeParam = url.searchParams.get('mode');
+	const mode =
+		modeParam === 'relevance_gap' || modeParam === 'impact' || modeParam === 'pulse'
+			? modeParam
+			: 'pulse';
+	const limitRaw = Number(url.searchParams.get('limit'));
+	const limit =
+		Number.isFinite(limitRaw) && limitRaw >= 1 && limitRaw <= 500
+			? Math.floor(limitRaw)
+			: DEFAULT_PULSE_LIMIT;
+	const whRaw = Number(url.searchParams.get('window_hours'));
+	const windowHours =
+		Number.isFinite(whRaw) && whRaw >= 1 && whRaw <= 168 ? whRaw : PULSE_WINDOW_HOURS;
+
+	const [api, weather, briefing, pulse] = await Promise.allSettled([
 		getApiStatus(fetch),
 		fetchOpenMeteoCurrent(fetch, { lat: 52.52, lon: 13.41 }),
+		getDailyBriefing(fetch, { windowHours }),
 		getDashboardPulse(fetch, {
-			windowHours: PULSE_WINDOW_HOURS,
-			limit: PULSE_LIMIT,
-			mode: 'pulse'
+			windowHours,
+			limit,
+			mode
 		})
 	]);
 
@@ -41,6 +60,11 @@ export const load: PageServerLoad = async ({ fetch }): Promise<PulsePageData> =>
 		apiErr: api.status === 'rejected' ? errMessage(api.reason) : null,
 		weather: weather.status === 'fulfilled' ? weather.value : null,
 		weatherErr: weather.status === 'rejected' ? errMessage(weather.reason) : null,
+		briefing: briefing.status === 'fulfilled' ? briefing.value : null,
+		briefingErr:
+			briefing.status === 'rejected'
+				? describeAPIError(briefing.reason, { fallback: 'Daily briefing unavailable.' })
+				: null,
 		pulse: pulse.status === 'fulfilled' ? pulse.value : null,
 		pulseErr:
 			pulse.status === 'rejected'

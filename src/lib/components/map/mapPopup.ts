@@ -1,5 +1,7 @@
 import type { Map as MLMap, MapGeoJSONFeature, Popup, PopupOptions } from 'maplibre-gl';
 
+import { formatImpactLine, formatVelocityLine } from '$lib/metrics/displayBands';
+
 /** Properties we surface as feature props for popup rendering (string-only for GeoJSON). */
 export interface PinFeatureProps {
 	id: string;
@@ -12,6 +14,7 @@ export interface PinFeatureProps {
 	impactScore?: number;
 	articleDensity?: number;
 	analystConviction?: number;
+	velocityScoreV1?: number;
 }
 
 export interface ClusterFeatureProps {
@@ -53,7 +56,9 @@ export function renderPinPopupHTML(p: PinFeatureProps): string {
 		const d = formatDateShort(p.happenedAt);
 		if (d) meta.push(escapeHTML(d));
 	}
-	if (typeof p.impactScore === 'number') meta.push(`impact ${escapeHTML(p.impactScore)}`);
+	if (typeof p.impactScore === 'number') meta.push(escapeHTML(formatImpactLine(p.impactScore)));
+	if (typeof p.velocityScoreV1 === 'number')
+		meta.push(escapeHTML(formatVelocityLine(p.velocityScoreV1)));
 	const img = p.imageUrl
 		? `<img src="${escapeHTML(p.imageUrl)}" alt="" loading="lazy" style="display:block;width:100%;max-height:120px;object-fit:cover;margin-bottom:8px;border-radius:4px;border:1px solid rgba(255,255,255,0.08);" />`
 		: '';

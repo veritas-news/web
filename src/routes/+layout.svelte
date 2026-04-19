@@ -4,6 +4,7 @@
 	import SiteHeader from '$lib/components/layout/SiteHeader.svelte';
 	import SiteFooter from '$lib/components/layout/SiteFooter.svelte';
 	import AlertSignalToast from '$lib/components/realtime/AlertSignalToast.svelte';
+	import '$lib/identity/auth-state.svelte';
 
 	let { children } = $props();
 </script>
