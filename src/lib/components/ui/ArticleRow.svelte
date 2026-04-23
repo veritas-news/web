@@ -2,8 +2,6 @@
 	import type { Article } from '$lib/types/article';
 	import { formatDateTime } from '$lib/utils/format';
 	import { cn } from '$lib/cn';
-	import ArticleImagePlaceholder from '$lib/components/ui/ArticleImagePlaceholder.svelte';
-
 	interface Props {
 		article: Article;
 	}
@@ -14,8 +12,6 @@
 	const imgFailed = $derived(
 		imgErrored || (!!article.imageUrl && article.imageUrl.includes('googleusercontent.com'))
 	);
-	/** Shown image (omit googleusercontent; treat load errors as no image). */
-	const showThumb = $derived(!!article.imageUrl && !imgFailed);
 	let imgRatio = $state<string | null>(null);
 
 	function onImgLoad(e: Event) {
@@ -47,12 +43,6 @@
 					onload={onImgLoad}
 					onerror={() => (imgErrored = true)}
 				/>
-			</div>
-		</div>
-	{:else if !showThumb}
-		<div class="@container order-1 h-auto w-full overflow-hidden">
-			<div class="w-full overflow-hidden">
-				<ArticleImagePlaceholder variant="banner" source={article.source} />
 			</div>
 		</div>
 	{/if}

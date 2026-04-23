@@ -39,7 +39,7 @@ export function toTimelineCard(item: UnifiedTimelineItem): TimelineCardModel {
     title: item.title,
     subtitle: item.subtitle,
     description: item.description,
-    timestamp: formatDateTime(item.timelineAt),
+    timestamp: `Updated ${formatDateTime(item.timelineAt)}`,
     impactScore: item.impactScore,
     analystConviction: item.analystConviction ?? null,
     metrics,

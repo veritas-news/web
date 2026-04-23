@@ -8,7 +8,7 @@ export function eventToUnified(item: Event): UnifiedTimelineItem {
 		title: item.title,
 		subtitle: item.category,
 		description: item.description ?? '',
-		timelineAt: item.happenedAt,
+		timelineAt: item.lastUpdatedAt ?? item.happenedAt,
 		impactScore: impact,
 		analystConviction: item.analystConviction ?? null,
 		sentimentIndex: item.sentimentIndex,
@@ -21,7 +21,7 @@ export function eventToUnified(item: Event): UnifiedTimelineItem {
 
 export function topicToUnified(item: TopicEvent): UnifiedTimelineItem {
 	const impact = item.impactScore ?? 0;
-	const timelineAt = item.timeEnd || item.lastUpdatedAt;
+	const timelineAt = item.lastUpdatedAt ?? item.timeEnd;
 	return {
 		id: item.id,
 		type: 'topic_event',
@@ -38,7 +38,7 @@ export function topicToUnified(item: TopicEvent): UnifiedTimelineItem {
 
 export function globalToUnified(item: GlobalEvent): UnifiedTimelineItem {
 	const impact = item.impactScore ?? 0;
-	const timelineAt = item.timeEnd || item.lastUpdatedAt;
+	const timelineAt = item.lastUpdatedAt ?? item.timeEnd;
 	return {
 		id: item.id,
 		type: 'global_event',

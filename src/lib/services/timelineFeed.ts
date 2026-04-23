@@ -13,18 +13,22 @@ export interface FeedPage {
 	nextCursor: string | null;
 }
 
-/** Optional `personalUserId` narrows unified timeline to follows (server-side). */
+/** Optional `personalUserId` narrows unified timeline to follows (server-side). Pass `mode: 'personalized'` with For-you ranking. */
 export async function fetchFeedPage(
 	fetcher: typeof fetch,
 	scope: TimelineScope,
 	cursor: string | null,
-	opts?: { personalUserId?: string }
+	opts?: { personalUserId?: string; mode?: 'personalized' }
 ): Promise<FeedPage> {
 	if (scope === 'unified') {
 		const base = cursor ? { cursor, limit: 30 } : { limit: 30 };
 		const params =
 			opts?.personalUserId != null && opts.personalUserId !== ''
-				? { ...base, personalUserId: opts.personalUserId }
+				? {
+						...base,
+						personalUserId: opts.personalUserId,
+						...(opts.mode === 'personalized' ? { mode: 'personalized' as const } : {})
+					}
 				: base;
 		const p = await listTimeline(fetcher, params);
 		return {

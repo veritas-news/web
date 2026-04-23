@@ -133,27 +133,12 @@ class AuthState {
 	async signInWithApple(): Promise<void> {
 		if (!firebaseAuth) throw new Error('Firebase not initialized');
 		this.error = '';
-		// #region agent log
-		fetch('http://127.0.0.1:7592/ingest/87399924-5534-4381-ab01-c25fcbba0aca',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'06a075'},body:JSON.stringify({sessionId:'06a075',hypothesisId:'H1-H5',location:'auth-state.svelte.ts:signInWithApple:entry',message:'apple-entry',data:{origin:typeof window!=='undefined'?window.location.origin:'n/a',host:typeof window!=='undefined'?window.location.host:'n/a',authDomain:firebaseAuth.app.options.authDomain,projectId:firebaseAuth.app.options.projectId,hasApp:!!firebaseAuth.app},timestamp:Date.now()})}).catch(()=>{});
-		// #endregion
 		try {
 			const provider = new OAuthProvider('apple.com');
 			provider.addScope('email');
 			provider.addScope('name');
-			// #region agent log
-			fetch('http://127.0.0.1:7592/ingest/87399924-5534-4381-ab01-c25fcbba0aca',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'06a075'},body:JSON.stringify({sessionId:'06a075',hypothesisId:'H1-H5',location:'auth-state.svelte.ts:signInWithApple:pre-popup',message:'apple-pre-popup',data:{providerId:provider.providerId,scopes:['email','name']},timestamp:Date.now()})}).catch(()=>{});
-			// #endregion
 			await signInWithPopup(firebaseAuth, provider);
-			// #region agent log
-			fetch('http://127.0.0.1:7592/ingest/87399924-5534-4381-ab01-c25fcbba0aca',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'06a075'},body:JSON.stringify({sessionId:'06a075',hypothesisId:'H1-H5',location:'auth-state.svelte.ts:signInWithApple:post-popup',message:'apple-post-popup-ok',data:{},timestamp:Date.now()})}).catch(()=>{});
-			// #endregion
 		} catch (e) {
-			// #region agent log
-			{
-				const err = e as { code?: string; message?: string; name?: string; customData?: unknown };
-				fetch('http://127.0.0.1:7592/ingest/87399924-5534-4381-ab01-c25fcbba0aca',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'06a075'},body:JSON.stringify({sessionId:'06a075',hypothesisId:'H1-H5',location:'auth-state.svelte.ts:signInWithApple:catch',message:'apple-error',data:{code:err?.code||null,message:err?.message||null,name:err?.name||null,customData:err?.customData||null,isFirebaseError:e instanceof FirebaseError},timestamp:Date.now()})}).catch(()=>{});
-			}
-			// #endregion
 			this.error = describeAuthError(e, 'Apple sign in failed');
 			throw e;
 		}

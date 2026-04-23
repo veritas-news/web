@@ -10,6 +10,8 @@ Status legend: 🟡 = UI scaffolded, waiting on backend · 🟢 = backend done.
 
 ## 1. `map.pin.preview` — Map pin popups (hover / click)
 
+**Backend status:** 🟢 (`mapPinItemDTO` adds `description`, `happenedAt`, `imageUrl`; map list queries attach `heroImageURL` from articles.)
+
 **Endpoint(s)**
 
 - `GET /v1/map/events`
@@ -54,6 +56,8 @@ analystConviction, metricVersions
 ---
 
 ## 2. `relationships.preview` — Human-readable relationship rows
+
+**Backend status:** 🟢 (`RelationshipRef.preview` populated via batched Neo4j reads per target kind in `relationships/reader.go`.)
 
 **Endpoint(s)**
 
@@ -126,6 +130,8 @@ RETURN
 ---
 
 ## 3. `alerts.preview` — Human-readable alert cards
+
+**Backend status:** 🟢 (`alertPreviewDTO` includes truncated description, optional hero **`imageUrl`**, **`GET /v1/alerts` bulk-loads event views in one query**.)
 
 **Endpoint(s)**
 

@@ -8,7 +8,7 @@
 
 <svelte:head>
 	<title>Alerts — Veritas</title>
-	<meta name="description" content="Recent event signal fingerprint changes (GET /v1/alerts)." />
+	<meta name="description" content="Recent event signal fingerprint changes from the Veritas intelligence graph." />
 </svelte:head>
 
 <div class="mx-auto grid max-w-[72rem] gap-sp-6 px-sp-6 pb-sp-10 pt-sp-6">
@@ -17,8 +17,7 @@
 		<h1 class="m-0 font-serif text-headline font-semibold">Alerts</h1>
 		<p class="m-0 max-w-[62ch] leading-[1.65] text-ink-soft">
 			Recent event signal fingerprint changes. Cards enrich with title, description, date, and
-			location when the backend provides preview fields on
-			<code class="text-[0.9em] text-event">GET /v1/alerts</code>.
+			location when the backend provides preview fields.
 		</p>
 	</header>
 

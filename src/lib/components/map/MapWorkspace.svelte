@@ -54,17 +54,40 @@
 	let clusters = $state<MapClusterItem[]>([]);
 	let currentZoom = $state(INITIAL_ZOOM);
 
+	const defaultUtcRange = () => {
+		const end = new Date();
+		const start = new Date(end.getTime() - 72 * 3600 * 1000);
+		return { start: start.toISOString(), end: end.toISOString() };
+	};
+	const initialRange = defaultUtcRange();
+
 	/** Applied server filters (time window + conviction). */
 	let appliedMapFilters = $state<{
 		timeStart?: string;
 		timeEnd?: string;
 		minConviction?: number;
 		maxConviction?: number;
-	}>({});
-	let draftTimeStart = $state('');
-	let draftTimeEnd = $state('');
+	}>({
+		timeStart: initialRange.start,
+		timeEnd: initialRange.end
+	});
+	let windowHours = $state(72);
+	let draftTimeStart = $state(initialRange.start);
+	let draftTimeEnd = $state(initialRange.end);
 	let draftMinConviction = $state('');
 	let draftMaxConviction = $state('');
+
+	function syncDraftTimeFromWindow() {
+		const end = new Date();
+		const start = new Date(end.getTime() - windowHours * 3600 * 1000);
+		draftTimeStart = start.toISOString();
+		draftTimeEnd = end.toISOString();
+	}
+
+	function onTimeWindowInput() {
+		syncDraftTimeFromWindow();
+		applyMapFilters();
+	}
 
 	function applyMapFilters() {
 		const timeStart = draftTimeStart.trim() || undefined;
@@ -105,11 +128,13 @@
 	}
 
 	function clearMapFilters() {
-		draftTimeStart = '';
-		draftTimeEnd = '';
+		windowHours = 72;
+		const r = defaultUtcRange();
+		draftTimeStart = r.start;
+		draftTimeEnd = r.end;
 		draftMinConviction = '';
 		draftMaxConviction = '';
-		appliedMapFilters = {};
+		appliedMapFilters = { timeStart: r.start, timeEnd: r.end };
 		errorMsg = null;
 		lastKey = '';
 		if (!mapInstance) return;
@@ -400,27 +425,20 @@
 		class="pointer-events-auto absolute left-[max(0.75rem,env(safe-area-inset-left))] bottom-[max(6.5rem,env(safe-area-inset-bottom))] z-20 max-w-[min(100%,20rem)] rounded-sm border border-white/12 bg-[#141418]/95 p-sp-3 font-sans text-body text-ink shadow-[0_4px_24px_rgb(0_0_0/0.45)] backdrop-blur-md"
 	>
 		<p class="mb-sp-2 text-label font-semibold uppercase tracking-wide text-ink-muted">Time &amp; conviction</p>
+		<label class="mb-sp-2 flex flex-col gap-1 text-label text-ink-muted">
+			<span>Past {windowHours}h (UTC, ends now)</span>
+			<input
+				class="w-full accent-event"
+				type="range"
+				min="6"
+				max="72"
+				step="6"
+				bind:value={windowHours}
+				oninput={onTimeWindowInput}
+				aria-label="Time window in hours"
+			/>
+		</label>
 		<div class="grid grid-cols-1 gap-sp-2 sm:grid-cols-2">
-			<label class="flex flex-col gap-1 text-label text-ink-muted">
-				<span>time_start</span>
-				<input
-					class="rounded border border-white/15 bg-[#0e0e10] px-sp-2 py-1 text-body text-ink"
-					type="text"
-					autocomplete="off"
-					placeholder="2025-04-01T00:00:00Z"
-					bind:value={draftTimeStart}
-				/>
-			</label>
-			<label class="flex flex-col gap-1 text-label text-ink-muted">
-				<span>time_end</span>
-				<input
-					class="rounded border border-white/15 bg-[#0e0e10] px-sp-2 py-1 text-body text-ink"
-					type="text"
-					autocomplete="off"
-					placeholder="2025-04-30T23:59:59Z"
-					bind:value={draftTimeEnd}
-				/>
-			</label>
 			<label class="flex flex-col gap-1 text-label text-ink-muted">
 				<span>min conviction</span>
 				<input

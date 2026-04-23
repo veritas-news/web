@@ -6,7 +6,7 @@
 	<title>Map — Veritas</title>
 	<meta
 		name="description"
-		content="Bbox-driven map of Veritas events, topics, and heatmap density (/v1/map/events, /v1/map/heatmap)."
+		content="Explore Veritas events and narrative clusters on an interactive map with optional density heatmap."
 	/>
 </svelte:head>
 

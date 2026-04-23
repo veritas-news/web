@@ -8,6 +8,7 @@
 		{ href: '/', label: 'Unified' },
 		{ href: '/articles', label: 'Articles' },
 		{ href: '/saved', label: 'Bookmarks' },
+		{ href: '/profile', label: 'Profile' },
 		{ href: '/search', label: 'Search' },
 		{ href: '/pulse', label: 'Briefing' },
 		{ href: '/alerts', label: 'Alerts' },

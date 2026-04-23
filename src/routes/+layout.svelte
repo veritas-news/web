@@ -12,6 +12,14 @@
 <svelte:head>
 	<link rel="icon" href={favicon} />
 	<title>Veritas</title>
+	<meta name="description" content="Veritas — narrative intelligence: timelines, maps, and signal-aware briefings." />
+	<meta property="og:title" content="Veritas" />
+	<meta
+		property="og:description"
+		content="Narrative intelligence — timelines, maps, cluster lineage, and analyst-grade signals."
+	/>
+	<meta property="og:type" content="website" />
+	<meta name="twitter:card" content="summary_large_image" />
 </svelte:head>
 
 <div class="grid min-h-screen grid-rows-[auto_1fr_auto]">

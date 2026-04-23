@@ -31,6 +31,9 @@
 	import { cn } from '$lib/cn';
 
 	const SPLIT_STORAGE_KEY = 'veritas.timelineSplitPct';
+	const FOR_YOU_STORAGE_KEY = 'veritas.timelineForYou';
+	const FOR_ME_STORAGE_KEY = 'veritas.timelineForMe';
+	/** @deprecated migrate to FOR_YOU_STORAGE_KEY */
 	const FOLLOWING_STORAGE_KEY = 'veritas.timelineFollowing';
 	const SPLIT_DEFAULT = 40;
 	const SPLIT_MIN = 22;
@@ -62,7 +65,7 @@
 	let liveUpdating = $state(false);
 	let liveStale = $state(false);
 	/** Unified timeline only: filter to user's follows (requires identity session). */
-	let followingMode = $state(false);
+	let followingMode = $state(true);
 	let personalUserId = $state<string | null>(null);
 
 	const cards = $derived(items.map(toTimelineCard));
@@ -87,31 +90,31 @@
 
 	const feedEyebrow = $derived(
 		scope === 'events'
-			? 'Level 1 — Events'
+			? 'Events'
 			: scope === 'topics'
-				? 'Level 2 — Topics'
+				? 'Topics'
 				: scope === 'global'
-					? 'Level 3 — Global'
+					? 'Global'
 					: followingMode
-						? 'Following'
-						: 'Global Intelligence'
+						? 'For you'
+						: 'Latest'
 	);
 
 	const scopeDescription = $derived(
 		scope === 'events'
-			? 'Single incidents that passed cluster density and multi-source gates. Newest signals first.'
+			? 'Events that passed quality gates.'
 			: scope === 'topics'
-				? 'Regional narratives synthesized across days or weeks. Follow article depth and sentiment drift.'
+				? 'Regional narratives.'
 				: scope === 'global'
-					? 'Widest arcs: themes that span borders and months. Impact and conviction are analyst-weighted.'
+					? 'Cross-border themes.'
 					: followingMode
-						? 'Stories that match topics or regions you follow—filtered on the server from the same unified stream.'
-						: 'Unified stream: globals, topics, and events in one ranked feed—ordering is server-defined; do not merge client-side.'
+						? 'Topics and regions you follow.'
+						: 'Full unified feed.'
 	);
 
-	function timelineFeedOpts(): { personalUserId?: string } | undefined {
+	function timelineFeedOpts(): { personalUserId?: string; mode?: 'personalized' } | undefined {
 		if (scope !== 'unified' || !followingMode || !personalUserId) return undefined;
-		return { personalUserId };
+		return { personalUserId, mode: 'personalized' };
 	}
 
 	async function refreshTimelineList() {
@@ -132,7 +135,8 @@
 		if (scope !== 'unified') return;
 		followingMode = next;
 		try {
-			localStorage.setItem(FOLLOWING_STORAGE_KEY, next ? '1' : '0');
+			localStorage.setItem(FOR_YOU_STORAGE_KEY, next ? '1' : '0');
+			localStorage.removeItem(FOLLOWING_STORAGE_KEY);
 		} catch {
 			/* ignore */
 		}
@@ -140,7 +144,7 @@
 			try {
 				personalUserId = await ensureAnonymousSession();
 			} catch (err) {
-				listError = describeAPIError(err, { fallback: 'Could not start a session for Following.' });
+				listError = describeAPIError(err, { fallback: 'Could not start a session for For you.' });
 				followingMode = false;
 				personalUserId = null;
 				return;
@@ -172,16 +176,28 @@
 		}
 
 		try {
-			if (scope === 'unified' && localStorage.getItem(FOLLOWING_STORAGE_KEY) === '1') {
-				followingMode = true;
-				void (async () => {
-					try {
-						personalUserId = await ensureAnonymousSession();
-						await refreshTimelineList();
-					} catch (err) {
-						console.warn('[timeline] following feed restore failed', err);
-					}
-				})();
+			if (scope === 'unified') {
+				const rawYou = localStorage.getItem(FOR_YOU_STORAGE_KEY);
+				const rawLegacyMe = localStorage.getItem(FOR_ME_STORAGE_KEY);
+				const rawOld = localStorage.getItem(FOLLOWING_STORAGE_KEY);
+				let forYou = true;
+				if (rawYou === '0') forYou = false;
+				else if (rawYou === '1') forYou = true;
+				else if (rawLegacyMe === '0') forYou = false;
+				else if (rawLegacyMe === '1') forYou = true;
+				else if (rawOld === '0') forYou = false;
+				else if (rawOld === '1') forYou = true;
+				followingMode = forYou;
+				if (forYou) {
+					void (async () => {
+						try {
+							personalUserId = await ensureAnonymousSession();
+							await refreshTimelineList();
+						} catch (err) {
+							console.warn('[timeline] for-you feed restore failed', err);
+						}
+					})();
+				}
 			}
 		} catch {
 			/* ignore */
@@ -422,7 +438,7 @@
 							aria-pressed={!followingMode}
 							onclick={() => void onFollowingToggle(false)}
 						>
-							All
+							Latest
 						</button>
 						<button
 							type="button"
@@ -433,7 +449,7 @@
 							aria-pressed={followingMode}
 							onclick={() => void onFollowingToggle(true)}
 						>
-							Following
+							For you
 						</button>
 					</div>
 				{/if}
