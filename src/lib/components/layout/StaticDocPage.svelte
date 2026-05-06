@@ -4,7 +4,7 @@
 	let {
 		title,
 		metaDescription,
-		eyebrow = 'Legal',
+		eyebrow = 'Veritas News',
 		children
 	}: {
 		title: string;
@@ -15,29 +15,20 @@
 </script>
 
 <svelte:head>
-	<title>{title} — Veritas</title>
+	<title>{title} — Veritas News</title>
 	<meta name="description" content={metaDescription} />
 </svelte:head>
 
-<div class="mx-auto grid max-w-[52rem] gap-sp-8 px-sp-6 pb-sp-12 pt-sp-8">
-	<header class="relative grid gap-sp-3 border-b border-outline-variant/80 pb-sp-6">
-		<div
-			class="pointer-events-none absolute top-0 left-0 h-full max-h-[6rem] w-[3px] bg-[image:var(--background-image-header-shine)] opacity-50"
-			aria-hidden="true"
-		></div>
-		<p
-			class="m-0 pl-sp-4 font-sans text-label font-bold tracking-[0.1em] text-ink-muted uppercase"
-		>
-			{eyebrow}
-		</p>
-		<h1
-			class="m-0 pl-sp-4 font-display text-[clamp(2rem,4vw,var(--text-display))] font-bold tracking-[0.02em] leading-tight"
-		>
-			{title}
-		</h1>
-	</header>
+<section class="section-shell py-sp-12 md:py-sp-16">
+	<div class="mx-auto max-w-4xl">
+		<div class="mb-sp-8 space-y-sp-4">
+			<p class="kicker">{eyebrow}</p>
+			<h1 class="font-display text-4xl font-semibold tracking-tight text-ink md:text-5xl">{title}</h1>
+			<p class="max-w-2xl text-lg leading-relaxed text-ink-muted">{metaDescription}</p>
+		</div>
 
-	<div class="grid gap-sp-4 font-sans text-body leading-[1.75] text-ink-soft">
-		{@render children()}
+		<div class="card-shell p-sp-6 md:p-sp-8">
+			{@render children()}
+		</div>
 	</div>
-</div>
+</section>

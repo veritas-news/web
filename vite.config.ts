@@ -1,4 +1,5 @@
 import { loadEnv } from 'vite';
+import type { ConfigEnv } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
@@ -6,7 +7,7 @@ import { sveltekit } from '@sveltejs/kit/vite';
 
 const DEFAULT_API_ORIGIN = 'https://veritas-sv.thinis.de';
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode }: ConfigEnv) => {
 	const appEnv = loadEnv(mode, process.cwd(), '');
 	const apiTarget = appEnv.PUBLIC_API_BASE_URL || DEFAULT_API_ORIGIN;
 
@@ -31,7 +32,7 @@ export default defineConfig(({ mode }) => {
 						browser: {
 							enabled: true,
 							provider: playwright(),
-							instances: [{ browser: 'chromium', headless: true }]
+							instances: [{ browser: 'chromium' as const, headless: true }]
 						},
 						include: ['src/**/*.svelte.{test,spec}.{js,ts}'],
 						exclude: ['src/lib/server/**']

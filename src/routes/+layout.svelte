@@ -3,36 +3,30 @@
 	import favicon from '$lib/assets/favicon.ico';
 	import SiteHeader from '$lib/components/layout/SiteHeader.svelte';
 	import SiteFooter from '$lib/components/layout/SiteFooter.svelte';
-	import AlertSignalToast from '$lib/components/realtime/AlertSignalToast.svelte';
-	import '$lib/identity/auth-state.svelte';
 
 	let { children } = $props();
 </script>
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
-	<title>Veritas</title>
-	<meta name="description" content="Veritas — narrative intelligence: timelines, maps, and signal-aware briefings." />
-	<meta property="og:title" content="Veritas" />
+	<title>Veritas News — mobile news intelligence</title>
+	<meta
+		name="description"
+		content="Veritas News is a mobile app for calmer news awareness: a clear timeline, daily briefing, saved reading, and notification controls."
+	/>
+	<meta property="og:title" content="Veritas News — mobile news intelligence" />
 	<meta
 		property="og:description"
-		content="Narrative intelligence — timelines, maps, cluster lineage, and analyst-grade signals."
+		content="A calmer mobile news app for following what changes, why it matters, and what to read next."
 	/>
 	<meta property="og:type" content="website" />
 	<meta name="twitter:card" content="summary_large_image" />
 </svelte:head>
 
-<div class="grid min-h-screen grid-rows-[auto_1fr_auto]">
+<div class="grid min-h-screen grid-rows-[auto_1fr_auto] bg-veritas-body text-ink">
 	<SiteHeader />
-	<main class="relative isolate min-h-0 min-w-0">
-		<div
-			class="pointer-events-none fixed inset-0 z-0 bg-noise-veritas opacity-[0.04]"
-			aria-hidden="true"
-		></div>
-		<div class="relative z-10">
-			{@render children()}
-		</div>
+	<main class="min-h-0 min-w-0">
+		{@render children()}
 	</main>
 	<SiteFooter />
-	<AlertSignalToast />
 </div>

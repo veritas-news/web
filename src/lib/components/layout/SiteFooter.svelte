@@ -1,34 +1,19 @@
-<script lang="ts">
-	const legalLinks = [
-		{ href: '/contact', label: 'Contact' },
-		{ href: '/support', label: 'Support' },
-		{ href: '/privacy-policy', label: 'Privacy' },
-		{ href: '/terms-of-service', label: 'Terms' },
-		{ href: '/cookie-policy', label: 'Cookies' },
-		{ href: '/data-deletion', label: 'Data deletion' },
-		{ href: '/eu-product-safety', label: 'EU product safety' }
-	] as const;
-</script>
+<footer class="border-t border-outline-variant bg-surface-low">
+	<div class="mx-auto grid max-w-7xl gap-sp-6 px-sp-6 py-sp-8 md:grid-cols-[1fr_auto] md:items-end md:px-sp-8 lg:px-sp-10">
+		<div class="max-w-xl space-y-sp-3">
+			<a class="inline-flex items-center gap-sp-3 text-ink no-underline" href="/" aria-label="Veritas News home">
+				<span class="grid size-8 place-items-center rounded-full bg-ink text-xs font-bold text-surface">V</span>
+				<span class="font-display text-lg font-semibold tracking-tight">Veritas News</span>
+			</a>
+			<p class="text-sm leading-relaxed text-ink-muted">
+				A calmer way to follow developing stories, read deeper coverage, and keep what matters.
+			</p>
+		</div>
 
-<footer
-	class="relative z-10 border-t border-outline-variant/80 bg-surface-low/60 px-sp-6 py-sp-6 backdrop-blur-sm"
-	aria-label="Legal and support"
->
-	<nav>
-		<ul
-			class="m-0 flex list-none flex-wrap items-center justify-center gap-x-sp-5 gap-y-sp-2 p-0 text-center"
-		>
-			{#each legalLinks as item (item.href)}
-				<li>
-					<a
-						href={item.href}
-						class="font-sans text-label font-semibold tracking-wide text-ink-soft no-underline transition-colors duration-veritas hover:text-ink"
-						data-sveltekit-preload-data="hover"
-					>
-						{item.label}
-					</a>
-				</li>
-			{/each}
-		</ul>
-	</nav>
+		<nav class="flex flex-wrap gap-sp-3 text-sm font-semibold" aria-label="Footer navigation">
+			<a class="text-ink-muted no-underline transition-colors duration-fast hover:text-ink" href="/about">About</a>
+			<a class="text-ink-muted no-underline transition-colors duration-fast hover:text-ink" href="/about-this-app">App</a>
+			<a class="text-ink-muted no-underline transition-colors duration-fast hover:text-ink" href="/support">Support</a>
+		</nav>
+	</div>
 </footer>

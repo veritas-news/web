@@ -1,149 +1,113 @@
 @import 'tailwindcss';
 
-/* Veritas — Tailwind v4 theme (replaces tokens.css) */
 @theme {
-	--color-surface: #0c0e11;
-	--color-surface-low: #111418;
-	--color-surface-base: #161a1f;
-	--color-surface-high: #1b2027;
-	--color-surface-highest: #20262e;
-	--color-surface-bright: #252d36;
+  --color-surface: #ffffff;
+  --color-surface-low: #f7f7f5;
+  --color-surface-base: #ffffff;
+  --color-surface-high: #f1f1ee;
+  --color-surface-highest: #e7e7e2;
+  --color-surface-bright: #ffffff;
+  --color-event: #1b998b;
+  --color-event-container: #dff4ef;
+  --color-event-dim: #0f5f56;
+  --color-topic: #f46036;
+  --color-topic-container: #ffe7dd;
+  --color-topic-dim: #9d3118;
+  --color-global: #d7263d;
+  --color-global-container: #ffe0e5;
+  --color-global-dim: #8c1424;
+  --color-ink: #050505;
+  --color-ink-soft: #333333;
+  --color-ink-muted: #6f6f6a;
+  --color-error: #d7263d;
+  --color-error-container: #ffe0e5;
+  --color-outline: #111111;
+  --color-outline-variant: #deded8;
 
-	--color-event: #c3c7cc;
-	--color-event-container: #43474b;
-	--color-event-dim: #b6b9be;
-	--color-topic: #feb300;
-	--color-topic-container: #513600;
-	--color-topic-dim: #eda600;
-	--color-global: #ec91ff;
-	--color-global-container: #580070;
-	--color-global-dim: #dd72f7;
+  --font-sans: 'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif: 'Newsreader', 'Georgia', serif;
+  --font-display: 'SF Pro Display', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-	--color-ink: #e0e6f1;
-	--color-ink-soft: #a5abb6;
-	--color-ink-muted: #707680;
+  --text-display: clamp(3rem, 8vw, 7.5rem);
+  --text-headline: clamp(2rem, 4vw, 4.5rem);
+  --text-title-lg: clamp(1.5rem, 3vw, 2.5rem);
+  --text-title: 1.25rem;
+  --text-body: 1rem;
+  --text-label: 0.78rem;
 
-	--color-error: #ee7d77;
-	--color-error-container: #7f2927;
-	--color-outline: #707680;
-	--color-outline-variant: #424851;
+  --spacing-sp-1: 0.25rem;
+  --spacing-sp-2: 0.5rem;
+  --spacing-sp-3: 0.75rem;
+  --spacing-sp-4: 1rem;
+  --spacing-sp-5: 1.25rem;
+  --spacing-sp-6: 1.5rem;
+  --spacing-sp-7: 2rem;
+  --spacing-sp-8: 3rem;
+  --spacing-sp-9: 4rem;
+  --spacing-sp-12: 6rem;
+  --spacing-sp-16: 8rem;
 
-	--font-sans: 'Work Sans', ui-sans-serif, system-ui, sans-serif;
-	--font-serif: 'Newsreader', Georgia, serif;
-	--font-display: 'Cormorant', 'Newsreader', Georgia, serif;
-
-	--text-display: 3.5rem;
-	--text-headline: 1.75rem;
-	--text-title-lg: 1.25rem;
-	--text-title: 1.05rem;
-	--text-body: 0.875rem;
-	--text-label: 0.6875rem;
-
-	--spacing-sp-1: 0.25rem;
-	--spacing-sp-2: 0.5rem;
-	--spacing-sp-3: 0.75rem;
-	--spacing-sp-4: 1rem;
-	--spacing-sp-5: 1.25rem;
-	--spacing-sp-6: 1.5rem;
-	--spacing-sp-8: 2rem;
-	--spacing-sp-10: 2.5rem;
-	--spacing-sp-12: 3rem;
-	--spacing-sp-16: 4rem;
-
-	--shadow-glow-event: 0 0 24px rgb(195 199 204 / 0.08);
-	--shadow-glow-topic: 0 0 28px rgb(254 179 0 / 0.1);
-	--shadow-glow-global: 0 0 32px rgb(236 145 255 / 0.12);
-	--shadow-card-hover: 0 12px 40px rgb(0 0 0 / 0.35);
-
-	--ease-veritas: cubic-bezier(0.33, 1, 0.68, 1);
-	--ease-veritas-out: cubic-bezier(0.16, 1, 0.3, 1);
-
-	--transition-duration-veritas: 200ms;
-	--transition-duration-veritas-slow: 420ms;
-
-	--background-image-header-shine: linear-gradient(
-		90deg,
-		transparent 0%,
-		rgb(236 145 255 / 0.35) 18%,
-		rgb(254 179 0 / 0.4) 42%,
-		rgb(195 199 204 / 0.25) 62%,
-		transparent 100%
-	);
+  --radius-card: 1.75rem;
+  --radius-panel: 2.5rem;
+  --shadow-card: 0 24px 70px rgb(5 5 5 / 0.08);
+  --shadow-soft: 0 12px 40px rgb(5 5 5 / 0.06);
+  --duration-veritas: 180ms;
 }
 
 @utility bg-veritas-body {
-	background-color: var(--color-surface);
-	background-image:
-		radial-gradient(120% 80% at 100% 0%, rgb(88 0 112 / 0.14) 0%, transparent 55%),
-		radial-gradient(90% 70% at 0% 100%, rgb(81 54 0 / 0.12) 0%, transparent 50%),
-		radial-gradient(ellipse at 50% 120%, rgb(30 42 58 / 0.55) 0%, transparent 45%);
-	background-attachment: fixed;
+  background:
+    radial-gradient(circle at 10% 0%, rgb(27 153 139 / 0.12), transparent 32rem),
+    radial-gradient(circle at 90% 12%, rgb(244 96 54 / 0.1), transparent 30rem),
+    linear-gradient(180deg, #ffffff 0%, #f7f7f5 100%);
 }
 
 @utility bg-noise-veritas {
-	background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-image:
+    linear-gradient(rgb(5 5 5 / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(5 5 5 / 0.035) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 @layer base {
-	*,
-	*::before,
-	*::after {
-		box-sizing: border-box;
-	}
+  html {
+    color-scheme: light;
+    background: #ffffff;
+    scroll-behavior: smooth;
+  }
 
-	html {
-		scroll-behavior: smooth;
-		@apply bg-surface;
-		color-scheme: dark;
-	}
+  body {
+    @apply min-h-screen bg-veritas-body font-sans text-body text-ink antialiased;
+    margin: 0;
+  }
 
-	body {
-		@apply m-0 min-h-screen bg-veritas-body font-sans text-body text-ink antialiased;
-		line-height: 1.5;
-	}
-
-	body,
-	h1,
-	h2,
-	h3,
-	h4,
-	h5,
-	h6,
-	p,
-	ul,
-	ol,
-	li {
-		@apply m-0 p-0;
-	}
+  ::selection {
+    @apply bg-event text-surface;
+  }
 
 	a {
-		@apply text-event no-underline transition-colors duration-veritas ease-veritas;
-	}
-	a:hover {
-	@apply bg-event/[0.08];
+		@apply text-event underline-offset-4 transition-colors;
+		transition-duration: var(--duration-veritas);
 	}
 
-	button,
-	input,
-	textarea,
-	select {
-		font: inherit;
-	}
+  a:hover {
+    @apply text-event-dim;
+  }
 
-	img {
-		@apply block max-w-full;
-	}
+  :focus-visible {
+    @apply outline-2 outline-offset-4 outline-event;
+  }
+}
 
-	::selection {
-		@apply bg-event/20;
-	}
+@layer components {
+  .card-shell {
+    @apply rounded-card border border-outline-variant bg-surface shadow-card;
+  }
 
-	:focus-visible {
-		@apply outline outline-1 outline-offset-2 outline-event;
-	}
+  .section-shell {
+    @apply mx-auto w-full max-w-7xl px-sp-5 sm:px-sp-7 lg:px-sp-8;
+  }
 
-	* {
-		scrollbar-width: thin;
-		scrollbar-color: var(--color-outline-variant) transparent;
-	}
+  .kicker {
+    @apply text-label font-semibold uppercase tracking-[0.24em] text-event;
+  }
 }

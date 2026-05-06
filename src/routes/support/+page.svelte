@@ -1,37 +1,58 @@
 <script lang="ts">
 	import StaticDocPage from '$lib/components/layout/StaticDocPage.svelte';
+
+	const sections = [
+		{
+			title: 'Getting started',
+			items: [
+				'Open the timeline to scan current developments.',
+				'Read the daily briefing when you want a short reset.',
+				'Save articles you want to revisit later.'
+			]
+		},
+		{
+			title: 'Useful checks',
+			items: [
+				'Confirm your device has a stable network connection.',
+				'Check whether notifications are enabled both in the app and in system settings.',
+				'Sign in if you expect saved reading or preferences to sync across devices.'
+			]
+		},
+		{
+			title: 'Contact',
+			items: [
+				'For support, privacy, or deletion requests, email veritas@thinis.de.',
+				'Include the screen, device, and short description of what happened.',
+				'Do not send passwords, tokens, private keys, or other secrets.'
+			]
+		}
+	];
 </script>
 
 <StaticDocPage
 	title="Support"
-	metaDescription="Help using Veritas: timelines, bookmarks, search, and how to get in touch."
+	metaDescription="Help using Veritas News: timeline, briefing, saved reading, notifications, and contact details."
 	eyebrow="Help"
 >
-	<p class="m-0">
-		<strong class="font-semibold text-ink">Veritas</strong> is an intelligence timeline: events, topics, and
-		global arcs, backed by the Veritas API. This page explains common issues and where to go next.
-	</p>
+	<div class="space-y-sp-5 text-sm leading-7 text-ink-soft">
+		<p>
+			Veritas News is built to stay calm and understandable. If something looks outdated, incomplete, or unavailable, first refresh the app or page and check whether the issue is limited to one screen.
+		</p>
+		<p>
+			For account, privacy, or deletion requests, include the email address you used to contact us. Do not send passwords, tokens, private keys, or other secrets.
+		</p>
+	</div>
 
-	<h2 class="m-0 pt-sp-2 font-display text-[1.15rem] font-bold text-ink">Before you write</h2>
-	<ul class="m-0 list-disc space-y-sp-2 pl-sp-6 text-ink-soft">
-		<li><strong class="font-semibold text-ink">Refresh the page</strong> — timelines and lists are server-ranked; a stale tab can show old ordering until reload.</li>
-		<li><strong class="font-semibold text-ink">Check your connection</strong> — detail views and search need a working network path to the API.</li>
-		<li><strong class="font-semibold text-ink">Bookmarks (Saved)</strong> are stored in <strong class="text-ink">your browser only</strong>. Clearing site data or using another device will not show the same saved items.</li>
-	</ul>
-
-	<h2 class="m-0 pt-sp-2 font-display text-[1.15rem] font-bold text-ink">Contact us</h2>
-	<p class="m-0">
-		For bugs, confusing behaviour, or account-related questions (when offered), email
-		<a class="break-all font-semibold text-event underline-offset-2 hover:underline" href="mailto:veritas@thinis.de"
-			>veritas@thinis.de</a
-		>. Include what you were doing, what you expected, and what you saw instead. Screenshots help.
-	</p>
-
-	<h2 class="m-0 pt-sp-2 font-display text-[1.15rem] font-bold text-ink">Privacy &amp; your data</h2>
-	<p class="m-0">
-		How we handle personal data is described in the
-		<a class="font-semibold text-event underline-offset-2 hover:underline" href="/privacy-policy">Privacy policy</a>.
-		To request deletion of data we hold about you, see
-		<a class="font-semibold text-event underline-offset-2 hover:underline" href="/data-deletion">Data deletion</a>.
-	</p>
+	<div class="mt-sp-8 grid gap-sp-4 md:grid-cols-3">
+		{#each sections as section (section.title)}
+			<section class="rounded-3xl border border-outline-variant bg-surface-high p-sp-5">
+				<h2 class="text-xl font-semibold tracking-[-0.03em] text-ink">{section.title}</h2>
+				<ul class="mt-sp-4 list-disc space-y-sp-2 pl-sp-5 text-sm leading-6 text-ink-soft">
+					{#each section.items as item (item)}
+						<li>{item}</li>
+					{/each}
+				</ul>
+			</section>
+		{/each}
+	</div>
 </StaticDocPage>
